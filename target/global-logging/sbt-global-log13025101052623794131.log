@@ -1,0 +1,104 @@
+[0m[[0m[0mdebug[0m] [0m[0m> Exec(run, None, None)[0m
+[0m[[0m[0mdebug[0m] [0m[0mEvaluating tasks: Compile / run[0m
+[0m[[0m[0mdebug[0m] [0m[0mRunning task... Cancel: Signal, check cycles: false, forcegc: true[0m
+[0m[[0m[0minfo[0m] [0m[0mcompiling 1 Scala source to /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/target/scala-3.3.1/classes ...[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:3:20 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m3 |[0m[33mobject[0m [35mMain[0m [33mextends[0m [35mJFXApp3[0m:[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m  |[0m                    ^^^^^^^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m                    Not found: type JFXApp3[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:7:4 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m7 |[0m    stage = [33mnew[0m JFXApp3.PrimaryStage:[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m  |[0m    ^^^^^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m    Not found: stage[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:7:16 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m7 |[0m    stage = [33mnew[0m JFXApp3.PrimaryStage:[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m  |[0m                ^^^^^^^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m                Not found: JFXApp3[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:8:6 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m8 |[0m      title = [31m"UniqueProjectName"[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m  |[0m      ^^^^^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m      Not found: title[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:9:6 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m9 |[0m      width = [31m600[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m  |[0m      ^^^^^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m      Not found: width[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m  |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:10:6 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m10 |[0m      height = [31m450[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m   |[0m      ^^^^^^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m      Not found: height[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:12:15 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m12 |[0m    [33mval[0m [36mroot[0m = Pane()[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m   |[0m               ^^^^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m               Not found: Pane[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:14:16 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m14 |[0m    [33mval[0m [36mscene[0m = Scene(parent = root)[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m   |[0m                ^^^^^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m                Not found: Scene[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:15:4 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m15 |[0m    stage.scene = scene[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m   |[0m    ^^^^^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m    Not found: stage[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:17:24 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m17 |[0m    [33mval[0m [36mrectangle[0m = [33mnew[0m [35mRectangle[0m:[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m   |[0m                        ^^^^^^^^^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m                        Not found: type Rectangle[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:18:6 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m18 |[0m      x = [31m275[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m   |[0m      ^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m      Not found: x[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:19:6 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m19 |[0m      y = [31m175[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m   |[0m      ^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m      Not found: y[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:20:6 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m20 |[0m      width = [31m50[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m   |[0m      ^^^^^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m      Not found: width[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:21:6 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m21 |[0m      height = [31m50[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m   |[0m      ^^^^^^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m      Not found: height[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:22:6 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m22 |[0m      fill = Blue[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m   |[0m      ^^^^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m      Not found: fill[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m-- [E006] Not Found Error: /Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/main/scala/Main.scala:22:13 [0m[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m22 |[0m      fill = Blue[0m
+[0m[[0m[31merror[0m] [0m[0m[31m[31m   |[0m             ^^^^[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m             Not found: Blue[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m[0m
+[0m[[0m[31merror[0m] [0m[0m[31m   |[0m longer explanation available when compiling with `-explain`[0m
+[0m[[0m[31merror[0m] [0m[0m16 errors found[0m
+[0m[[0m[31merror[0m] [0m[0m(Compile / [31mcompileIncremental[0m) Compilation failed[0m
+[0m[[0m[31merror[0m] [0m[0mTotal time: 5 s, completed 5.2.2024 klo 15.07.46[0m
+[0m[[0m[0mdebug[0m] [0m[0m> Exec(idea-shell, None, None)[0m
