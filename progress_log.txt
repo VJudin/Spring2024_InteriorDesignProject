@@ -5,3 +5,5 @@ tapaa lisätä käyttäjän oma pohjapiirrustus käyttöliittymään. Ensimmäis
 kuvatiedoston polku. Aion rakentaa muut luokat sen jälkeen, kun saan graafisen käyttöliittymän ensin toimimaan
 kunnolla, sillä en uskalla työstää muita luokkia mikäli en voi testata niiden toimivuutta muun ohjelman kanssa.
 Tähän mennessä projekti on edennyt hitaasti, mutta aion nopeuttaa etenemistahtia.
+
+6.3 - ???
