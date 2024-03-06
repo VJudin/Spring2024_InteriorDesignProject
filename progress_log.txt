@@ -1,0 +1,7 @@
+23.2-6.3
+Aloitin projektin kunnolla. Loin alustavat luokat luokkarakenteen hahmottamisen helpottamiseksi. Sen lisäksi aloitin
+käyttöliittymän suunnittelun, tosin se ei vielä tee mitään. Harjoittelin VBox:in ja HBox:in käyttöä sekä mietin parasta
+tapaa lisätä käyttäjän oma pohjapiirrustus käyttöliittymään. Ensimmäisenä keinona aion tekstikenttää, johon lisätään
+kuvatiedoston polku. Aion rakentaa muut luokat sen jälkeen, kun saan graafisen käyttöliittymän ensin toimimaan
+kunnolla, sillä en uskalla työstää muita luokkia mikäli en voi testata niiden toimivuutta muun ohjelman kanssa.
+Tähän mennessä projekti on edennyt hitaasti, mutta aion nopeuttaa etenemistahtia.
