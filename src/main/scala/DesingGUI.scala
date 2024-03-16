@@ -1,13 +1,16 @@
 import scalafx.application.JFXApp3
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
+import scalafx.scene.canvas.Canvas
 import scalafx.scene.control.{Button, Label, TextField}
 import scalafx.scene.image.{Image, ImageView}
-import scalafx.scene.layout.{Background, ColumnConstraints, GridPane, HBox, Pane, RowConstraints, VBox}
+import scalafx.scene.layout.{Background, ColumnConstraints, GridPane, HBox, Pane, RowConstraints, StackPane, VBox}
+import scalafx.scene.paint.Color
 import scalafx.scene.shape.{Rectangle, Shape}
 import scalafx.scene.paint.Color.*
-import scalafx.stage.Popup
+import scalafx.stage.{FileChooser, Popup}
 
+import java.awt.Desktop
 import java.io.FileInputStream
 
 /** Luokan alku, johon voi jo lisätä oman pohjapiirrustuksen, ei käsittele virheellisiä syötteitä **/
@@ -49,14 +52,24 @@ object DesingGUI extends JFXApp3:
       fitHeight = stage.height.toDouble - 70
       fitWidth = stage.width.toDouble * 3/4
 
+    val root2 = GridPane()
+    val canvas = Canvas( stage.width.toDouble * 3 / 4, stage.height.toDouble - 70)
+    var mainScene2 = canvas.graphicsContext2D
+
+    var hmm = new StackPane():
+      children = Array( mainScene, root2 )
+
+
     /**Luo uuden ikkunan, jonne lisätään kuvatiedoston polku**/
 
 
     val d = new HBox():
-      children = Array(mainScene, sidePanel)
+      children = Array(hmm, sidePanel)
 
 
-    val popUp = new VBox():
+/**    Saving code of popUp for possible later use
+ * 
+ * val popUp = new VBox():
       val label = Label("Add the path to your floorplan")
       val text1 = TextField()
       val button = new Button("Submit"):
@@ -69,12 +82,25 @@ object DesingGUI extends JFXApp3:
           d.children = Array( mainScene, sidePanel)
           text1.clear()
       text1.promptText = "Add the path to your floorplan here"
-      children = Array( label, text1, button )
+      children = Array( label, text1, button ) */
+  
 
-    val scene2 = Scene(parent = popUp)
+    val fileChooser = new FileChooser():
+      title = "Open image of floorplan"
+
+    //val scene2 = Scene(parent = popUp)
 
     val addButton = new Button( "Add floorplan"):
-      onAction = (event) => stage.scene = scene2
+      onAction = (event) =>
+        val floorplan = fileChooser.showOpenDialog(stage)
+        if floorplan != null then
+          mainScene = new ImageView(Image(FileInputStream(floorplan.getAbsolutePath))):
+            fitHeight = stage.height.toDouble - 70
+            fitWidth = stage.width.toDouble * 3/4
+          d.children.clear()
+          d.children = Array( mainScene, sidePanel)
+
+    //stage.scene = scene2 <- old code of addButton, testing smth new
 
     val bottomBar = new HBox():
       padding = Insets.apply(10, 10, 10, 10)
