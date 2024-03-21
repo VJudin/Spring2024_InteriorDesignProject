@@ -1,9 +1,10 @@
 import scalafx.scene.paint.Color
-import scalafx.scene.shape.{Rectangle, Shape}
+import scalafx.scene.shape.Shape.sfxShape2jfx
+import scalafx.scene.shape.{Circle, Rectangle, Shape}
 
 /** Alustava luokkarakenne, täytyy tehdä valmiiksi myöhemmin **/
 
-class Part ( name: String, var width: Int, var lenght: Int, canHaveOnTop: Boolean, shape: Shape, x: Int, y: Int):
+class Part ( name: String, var width: Int, var lenght: Int, canHaveOnTop: Boolean, val shape: Shape, var x: Int, var y: Int):
 
   def changeSize( w: Int, l: Int) =
     width = w
@@ -16,3 +17,16 @@ class Furniture( val fname: String,  width: Int, lenght: Int, canHaveOnTop: Bool
 
   def changeColor( c: Color) =
     color = c
+    
+  val f = this
+    
+  def copy(): Furniture =
+    var shapeOf: Shape =
+      this.shape match
+        case shape: Rectangle => new Rectangle:
+          this.width = f.width.toDouble
+          this.height = f.lenght.toDouble
+        case shape: Circle => new Circle:
+          radius = f.width.toDouble
+    new Furniture( fname, width, lenght, canHaveOnTop, shapeOf, 0, 0, color, canBePlacedOnTop)
+  

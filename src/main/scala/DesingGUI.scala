@@ -45,16 +45,25 @@ object DesingGUI extends JFXApp3:
       width = stage.width.toDouble / 4
       height = (stage.height.toDouble-70) / 3
       fill = Green
-    val sofaPanel = new FurniturePanel( Furniture("Sofa", 60, 60, false, Rectangle(60, 60), 0, 0, Red, false), rectangle2.width.toDouble, rectangle2.height.toDouble)
+
+    val root2 = GridPane()
+
+    val testFurniture = new Furniture("Sofa", 60, 60, false, Rectangle(60, 60), 0, 0, Red, false)
+    val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2)
     
 
     var mainScene = new ImageView(Image(FileInputStream("/Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/test/piirrustus.jpeg"))):
       fitHeight = stage.height.toDouble - 70
       fitWidth = stage.width.toDouble * 3/4
 
-    val root2 = GridPane()
-    val canvas = Canvas( stage.width.toDouble * 3 / 4, stage.height.toDouble - 70)
-    var mainScene2 = canvas.graphicsContext2D
+
+    //root2.setPrefHeight(stage.height.toDouble - 70)
+    //root2.setPrefWidth(stage.width.toDouble * 3/4)
+
+    //val canvas = Canvas( stage.width.toDouble * 3 / 4, stage.height.toDouble - 70)
+    //var mainScene2 = canvas.graphicsContext2D
+
+
 
     var hmm = new StackPane():
       children = Array( mainScene, root2 )
@@ -67,8 +76,9 @@ object DesingGUI extends JFXApp3:
       children = Array(hmm, sidePanel)
 
 
+
 /**    Saving code of popUp for possible later use
- * 
+ *
  * val popUp = new VBox():
       val label = Label("Add the path to your floorplan")
       val text1 = TextField()
@@ -83,7 +93,7 @@ object DesingGUI extends JFXApp3:
           text1.clear()
       text1.promptText = "Add the path to your floorplan here"
       children = Array( label, text1, button ) */
-  
+
 
     val fileChooser = new FileChooser():
       title = "Open image of floorplan"
@@ -99,8 +109,6 @@ object DesingGUI extends JFXApp3:
             fitWidth = stage.width.toDouble * 3/4
           d.children.clear()
           d.children = Array( mainScene, sidePanel)
-
-    //stage.scene = scene2 <- old code of addButton, testing smth new
 
     val bottomBar = new HBox():
       padding = Insets.apply(10, 10, 10, 10)
