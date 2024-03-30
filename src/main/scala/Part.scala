@@ -4,7 +4,7 @@ import scalafx.scene.shape.{Circle, Rectangle, Shape}
 
 /** Alustava luokkarakenne, täytyy tehdä valmiiksi myöhemmin **/
 
-class Part ( name: String, var width: Int, var lenght: Int, canHaveOnTop: Boolean, val shape: Shape, var x: Int, var y: Int):
+class Part ( name: String, var width: Int, var lenght: Int, canHaveOnTop: Boolean, val shape: Shape, var x: Double, var y: Double):
 
   def changeSize( w: Int, l: Int) =
     width = w
@@ -13,13 +13,14 @@ class Part ( name: String, var width: Int, var lenght: Int, canHaveOnTop: Boolea
 class Wall(width: Int, length: Int, s: Boolean,  shape: Rectangle, x: Int, y: Int) extends Part("Wall", width, length, false,  Rectangle(width, length), x, y):
   ???
 
-class Furniture( val fname: String,  width: Int, lenght: Int, canHaveOnTop: Boolean, shape: Shape, x: Int, y: Int, var color: Color, canBePlacedOnTop: Boolean) extends Part (fname, width: Int, lenght: Int, canHaveOnTop: Boolean, shape: Shape, x: Int, y: Int):
+class Furniture( val fname: String,  width: Int, lenght: Int, canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double, var color: Color, canBePlacedOnTop: Boolean) extends Part (fname, width: Int, lenght: Int, canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double):
 
   def changeColor( c: Color) =
     color = c
     
   val f = this
     
+  /** Mahdollistaa tietyn huonekaluolion kopioimisen, jotta kopioita huonekaluista voi lisätä pohjapiirrustukseen*/
   def copy(): Furniture =
     var shapeOf: Shape =
       this.shape match
@@ -28,5 +29,5 @@ class Furniture( val fname: String,  width: Int, lenght: Int, canHaveOnTop: Bool
           this.height = f.lenght.toDouble
         case shape: Circle => new Circle:
           radius = f.width.toDouble
-    new Furniture( fname, width, lenght, canHaveOnTop, shapeOf, 0, 0, color, canBePlacedOnTop)
+    new Furniture( fname, width, lenght, canHaveOnTop, shapeOf, 0.0, 0.0, color, canBePlacedOnTop)
   

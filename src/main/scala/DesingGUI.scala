@@ -1,9 +1,12 @@
+import javafx.scene.Node
 import scalafx.application.JFXApp3
+import scalafx.event.EventHandler
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
 import scalafx.scene.canvas.Canvas
 import scalafx.scene.control.{Button, Label, TextField}
 import scalafx.scene.image.{Image, ImageView}
+import scalafx.scene.input.MouseDragEvent
 import scalafx.scene.layout.{Background, ColumnConstraints, GridPane, HBox, Pane, RowConstraints, StackPane, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.{Rectangle, Shape}
@@ -11,7 +14,9 @@ import scalafx.scene.paint.Color.*
 import scalafx.stage.{FileChooser, Popup}
 
 import java.awt.Desktop
+import java.awt.event.{MouseEvent, MouseListener, MouseMotionListener}
 import java.io.FileInputStream
+import scala.collection.mutable.ListBuffer
 
 /** Luokan alku, johon voi jo lisätä oman pohjapiirrustuksen, ei käsittele virheellisiä syötteitä **/
 
@@ -46,10 +51,15 @@ object DesingGUI extends JFXApp3:
       height = (stage.height.toDouble-70) / 3
       fill = Green
 
-    val root2 = GridPane()
+    val root2 = new Pane():
+      prefHeight = stage.height.toDouble - 70
+      prefWidth  = stage.width.toDouble * 3/4
+    val canvas = Canvas(stage.width.toDouble * 3/4 , stage.height.toDouble - 70)
+    val g = canvas.graphicsContext2D
 
     val testFurniture = new Furniture("Sofa", 60, 60, false, Rectangle(60, 60), 0, 0, Red, false)
-    val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2)
+    val allFurniture = ListBuffer[Furniture]()
+    val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture, canvas)
     
 
     var mainScene = new ImageView(Image(FileInputStream("/Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/test/piirrustus.jpeg"))):
@@ -64,16 +74,12 @@ object DesingGUI extends JFXApp3:
     //var mainScene2 = canvas.graphicsContext2D
 
 
-
-    var hmm = new StackPane():
-      children = Array( mainScene, root2 )
-
-
-    /**Luo uuden ikkunan, jonne lisätään kuvatiedoston polku**/
+    var stack = new StackPane():
+      children = Array( mainScene, root2)
 
 
     val d = new HBox():
-      children = Array(hmm, sidePanel)
+      children = Array(stack, sidePanel)
 
 
 
@@ -107,13 +113,21 @@ object DesingGUI extends JFXApp3:
           mainScene = new ImageView(Image(FileInputStream(floorplan.getAbsolutePath))):
             fitHeight = stage.height.toDouble - 70
             fitWidth = stage.width.toDouble * 3/4
-          d.children.clear()
-          d.children = Array( mainScene, sidePanel)
+          stack.children.clear()
+          stack.children = Array( mainScene, root2)
+
+    /** Huonekalujen liikuttamiseen liittyvää koodia*/
+    var mouseX = 0.0
+    var mouseY = 0.0
+    var f = new Rectangle():
+      width = 30
+      height = 60
+
+
 
     val bottomBar = new HBox():
       padding = Insets.apply(10, 10, 10, 10)
       spacing = 10
-
       background = Background.fill(White)
       children = Array(addButton)
 
