@@ -9,7 +9,7 @@ import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.input.MouseDragEvent
 import scalafx.scene.layout.{Background, ColumnConstraints, GridPane, HBox, Pane, RowConstraints, StackPane, VBox}
 import scalafx.scene.paint.Color
-import scalafx.scene.shape.{Rectangle, Shape}
+import scalafx.scene.shape.{Circle, Rectangle, Shape}
 import scalafx.scene.paint.Color.*
 import scalafx.stage.{FileChooser, Popup}
 
@@ -54,12 +54,13 @@ object DesingGUI extends JFXApp3:
     val root2 = new Pane():
       prefHeight = stage.height.toDouble - 70
       prefWidth  = stage.width.toDouble * 3/4
-    val canvas = Canvas(stage.width.toDouble * 3/4 , stage.height.toDouble - 70)
-    val g = canvas.graphicsContext2D
+
 
     val testFurniture = new Furniture("Sofa", 60, 60, false, Rectangle(60, 60), 0, 0, Red, false)
+    val testFurniture2 = new Furniture( "Table", 30, 30, false, Circle(40), 0, 0, Blue, false)
     val allFurniture = ListBuffer[Furniture]()
-    val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture, canvas)
+    val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
+    val tablePanel = new FurniturePanel( testFurniture2, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
     
 
     var mainScene = new ImageView(Image(FileInputStream("/Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/test/piirrustus.jpeg"))):
@@ -78,7 +79,7 @@ object DesingGUI extends JFXApp3:
       children = Array( mainScene, root2)
 
 
-    val d = new HBox():
+    val mainView = new HBox():
       children = Array(stack, sidePanel)
 
 
@@ -94,12 +95,11 @@ object DesingGUI extends JFXApp3:
                   fitHeight = stage.height.toDouble - 70
                   fitWidth = stage.width.toDouble * 3/4
           stage.scene = scene1
-          d.children.clear()
-          d.children = Array( mainScene, sidePanel)
+          mainView.children.clear()
+          mainView.children = Array( mainScene, sidePanel)
           text1.clear()
       text1.promptText = "Add the path to your floorplan here"
       children = Array( label, text1, button ) */
-
 
     val fileChooser = new FileChooser():
       title = "Open image of floorplan"
@@ -130,9 +130,9 @@ object DesingGUI extends JFXApp3:
       spacing = 10
       background = Background.fill(White)
       children = Array(addButton)
-
-    sidePanel.children = Array(rectangle2, rectangle3, sofaPanel)
-    root.children = Array(d, bottomBar)
+    val n = new furnitureInfoPanel(testFurniture, root2)
+    sidePanel.children = Array(rectangle2, tablePanel, sofaPanel)
+    root.children = Array(mainView, bottomBar)
 
 
   end start

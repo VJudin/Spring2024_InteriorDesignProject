@@ -15,8 +15,12 @@ class Wall(width: Int, length: Int, s: Boolean,  shape: Rectangle, x: Int, y: In
 
 class Furniture( val fname: String,  width: Int, lenght: Int, canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double, var color: Color, canBePlacedOnTop: Boolean) extends Part (fname, width: Int, lenght: Int, canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double):
 
+  this.shape.fill = this.color
+  
+  /** Vaihtaa huonekaluolion säilyttämää väriä ja samalla muuttaa siitä mahdollisesti piirretyn version värin */
   def changeColor( c: Color) =
     color = c
+    this.shape.fill = c
     
   val f = this
     
