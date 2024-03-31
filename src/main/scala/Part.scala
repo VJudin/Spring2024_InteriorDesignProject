@@ -13,7 +13,7 @@ class Part ( name: String, var width: Int, var lenght: Int, canHaveOnTop: Boolea
 class Wall(width: Int, length: Int, s: Boolean,  shape: Rectangle, x: Int, y: Int) extends Part("Wall", width, length, false,  Rectangle(width, length), x, y):
   ???
 
-class Furniture( val fname: String,  width: Int, lenght: Int, canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double, var color: Color, canBePlacedOnTop: Boolean) extends Part (fname, width: Int, lenght: Int, canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double):
+class Furniture( val fname: String,  width: Int, lenght: Int, val canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double, var color: Color, val canBePlacedOnTop: Boolean) extends Part (fname, width: Int, lenght: Int, canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double):
 
   this.shape.fill = this.color
   

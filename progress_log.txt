@@ -6,4 +6,15 @@ kuvatiedoston polku. Aion rakentaa muut luokat sen jälkeen, kun saan graafisen 
 kunnolla, sillä en uskalla työstää muita luokkia mikäli en voi testata niiden toimivuutta muun ohjelman kanssa.
 Tähän mennessä projekti on edennyt hitaasti, mutta aion nopeuttaa etenemistahtia.
 
-6.3 - ???
+6.3 - 22.3
+Pohjapiirrustuksen lisääminen ohjelmaan onnistuikin FileChooserin avulla käyttäjäystävällisemmin, joten muutin sen toteutuksen täysin. 
+Nyt käyttäjä pystyy lisäämään pohjapiirrustuksen tietokoneensa tiedostoista. Lisäys ei edelleenkään käsittele virheellisiä tiedostoja. 
+Sen lisäksi aloitin huonekalujen toteutuksen ensin laatimalla FurniturePanel luokan, jonka avulla pohjapiirrustukseen voi lisätä huonekaluja. 
+Tämän kanssa minulla oli aika paljon ongelmia aluksi, mutta kohti ajanjakson loppua sain ohjelman vihdoin lisäämään huonekalun näkymän 
+ylänurkkaan. Tässä kohtaa sitä ei vielä pysty liikuttamaan. 
+
+23.3 - 5.3
+Tällä ajanjaksolla tavoitteeni on lisätä ohjelmaan toiminnallisuutta. Aloitin tämän huonekalujen liikkuttamisesta. Siihen kului aika paljon 
+aikaa, mutta sain huonekalujen liikuttamisen toimimaan. Sen jälkeen päätin, että niiden väriä pitäisi pystyä muuttamaan. Värin vaihtamiseen
+ColorPicker osoittautui todella käteväksi. Sen jälkeen ajattelin, että olisi hyvä implementoida se, että huonekalut eivät saa olla toistensa
+päällä. 

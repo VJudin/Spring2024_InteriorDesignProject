@@ -56,11 +56,13 @@ object DesingGUI extends JFXApp3:
       prefWidth  = stage.width.toDouble * 3/4
 
 
-    val testFurniture = new Furniture("Sofa", 60, 60, false, Rectangle(60, 60), 0, 0, Red, false)
-    val testFurniture2 = new Furniture( "Table", 30, 30, false, Circle(40), 0, 0, Blue, false)
+    val testFurniture = new Furniture("Sofa", 60, 60, true, Rectangle(60, 60), 0, 0, Red, false)
+    val testFurniture2 = new Furniture( "Table", 30, 30, true, Circle(40), 0, 0, Blue, false)
+    val testFurniture3 = new Furniture( "Lamp", 20, 20, false, Circle(20), 0, 0, Yellow, true)
     val allFurniture = ListBuffer[Furniture]()
     val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
     val tablePanel = new FurniturePanel( testFurniture2, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
+    val lampPanel = new FurniturePanel( testFurniture3, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
     
 
     var mainScene = new ImageView(Image(FileInputStream("/Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/test/piirrustus.jpeg"))):
@@ -124,7 +126,7 @@ object DesingGUI extends JFXApp3:
       background = Background.fill(White)
       children = Array(addButton)
     val n = new furnitureInfoPanel(testFurniture, root2)
-    sidePanel.children = Array(rectangle2, tablePanel, sofaPanel)
+    sidePanel.children = Array(lampPanel, tablePanel, sofaPanel)
     root.children = Array(mainView, bottomBar)
 
 

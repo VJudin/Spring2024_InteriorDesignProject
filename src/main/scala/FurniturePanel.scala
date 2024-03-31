@@ -39,7 +39,6 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
     onAction = (event) =>
       var newOne = f.copy()
       val shape = newOne.shape
-      //addTo.add(shape, newOne.x, newOne.y)
       addTo.children += shape
       val draggableMaker = new DraggableMaker()
       draggableMaker.makeDraggable( newOne, listOfFurniture )
@@ -62,16 +61,18 @@ class DraggableMaker:
   private var priorPositionX = 0.0
   private var priorPositionY = 0.0
 
-  def checkIntersection( s: Shape, b: ListBuffer[Furniture] ) =
+  def checkIntersection( s: Furniture, b: ListBuffer[Furniture] ) =
     var collisionDetected = false
     var d = b.filter( x => !x.equals(s))
     if d.nonEmpty then
-      var c = d.map(x => x.shape)
-      for shape <- c do
-        if !s.equals(shape) then
-          var intersect = Shape.intersect( shape, s )
-          if intersect.getBoundsInLocal.getWidth != -1 then
-           collisionDetected = true
+      for furniture <- d do
+        if s.canBePlacedOnTop && furniture.canHaveOnTop then
+          collisionDetected = false
+        else
+          if !s.shape.equals(furniture.shape) then
+            var intersect = Shape.intersect( furniture.shape, s.shape )
+            if intersect.getBoundsInLocal.getWidth != -1 then
+             collisionDetected = true
     collisionDetected
 
   def makeDraggable( a: Furniture, b: ListBuffer[Furniture] ) =
@@ -91,7 +92,7 @@ class DraggableMaker:
       n.setTranslateY(event.getSceneY - mouseAnchorY ))
 
     n.setOnMouseReleased((event) =>
-      if checkIntersection( n, b ) then
+      if checkIntersection( a, b ) then
         n.setLayoutX( priorPositionX)
         n.setLayoutY( priorPositionY)
       else
