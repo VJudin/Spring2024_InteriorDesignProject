@@ -68,13 +68,6 @@ object DesingGUI extends JFXApp3:
       fitWidth = stage.width.toDouble * 3/4
 
 
-    //root2.setPrefHeight(stage.height.toDouble - 70)
-    //root2.setPrefWidth(stage.width.toDouble * 3/4)
-
-    //val canvas = Canvas( stage.width.toDouble * 3 / 4, stage.height.toDouble - 70)
-    //var mainScene2 = canvas.graphicsContext2D
-
-
     var stack = new StackPane():
       children = Array( mainScene, root2)
 

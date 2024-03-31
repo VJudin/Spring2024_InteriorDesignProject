@@ -34,4 +34,6 @@ class Furniture( val fname: String,  width: Int, lenght: Int, canHaveOnTop: Bool
         case shape: Circle => new Circle:
           radius = f.width.toDouble
     new Furniture( fname, width, lenght, canHaveOnTop, shapeOf, 0.0, 0.0, color, canBePlacedOnTop)
+    
+  def compare( second: Furniture ): Boolean = f.fname == second.fname && f.lenght == second.lenght && f.width == second.width && f.shape == second.shape && f.color == second.color && f.x == second.x && f.y == second.y
   

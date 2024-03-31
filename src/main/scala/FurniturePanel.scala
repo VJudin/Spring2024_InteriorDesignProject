@@ -1,5 +1,6 @@
+import javafx.geometry
 import javafx.scene.canvas
-import scalafx.geometry.Insets
+import scalafx.geometry.{Insets, Point2D}
 import scalafx.scene.control.{Button, ColorPicker, Label}
 import scalafx.scene.layout.{Background, GridPane, HBox, Pane, VBox}
 import scalafx.scene.paint.Color.{Blue, Green, White}
@@ -11,6 +12,7 @@ import scalafx.scene.canvas.Canvas
 import scalafx.scene.input.MouseEvent.MouseMoved
 import scalafx.scene.shape.Shape.sfxShape2jfx
 import scalafx.scene.SceneIncludes.jfxColor2sfx
+import scalafx.scene.SceneIncludes.jfxShape2sfx
 
 import java.awt.MouseInfo
 import scala.collection.mutable.ListBuffer
@@ -40,7 +42,7 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
       //addTo.add(shape, newOne.x, newOne.y)
       addTo.children += shape
       val draggableMaker = new DraggableMaker()
-      draggableMaker.makeDraggable( newOne )
+      draggableMaker.makeDraggable( newOne, listOfFurniture )
       newOne.shape.onMouseClicked = (event) =>
         addTo.children += new furnitureInfoPanel(newOne, addTo)
       listOfFurniture += newOne
@@ -49,6 +51,7 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
 
   this.children = Array( furnitureName, f.shape, addButton)
 
+
 /** Tekee huonekaluista liikuteltavia */
 class DraggableMaker:
 
@@ -56,31 +59,51 @@ class DraggableMaker:
   private var mouseAnchorY = 0.0
   private var mouseOffsetFromNodeX = 0.0
   private var mouseOffsetFromNodeY = 0.0
+  private var priorPositionX = 0.0
+  private var priorPositionY = 0.0
 
-  def makeDraggable( a: Furniture ) =
+  def checkIntersection( s: Shape, b: ListBuffer[Furniture] ) =
+    var collisionDetected = false
+    var d = b.filter( x => !x.equals(s))
+    if d.nonEmpty then
+      var c = d.map(x => x.shape)
+      for shape <- c do
+        if !s.equals(shape) then
+          var intersect = Shape.intersect( shape, s )
+          if intersect.getBoundsInLocal.getWidth != -1 then
+           collisionDetected = true
+    collisionDetected
 
+  def makeDraggable( a: Furniture, b: ListBuffer[Furniture] ) =
     var n = a.shape
+    var c = b.map( x => x.shape)
+
     n.setOnMousePressed((event) =>
       mouseAnchorX = event.getSceneX
       mouseAnchorY = event.getSceneY
       mouseOffsetFromNodeX = a.x - mouseAnchorX
-      mouseOffsetFromNodeY = a.y - mouseAnchorY)
+      mouseOffsetFromNodeY = a.y - mouseAnchorY
+      priorPositionX = n.getLayoutX
+      priorPositionY = n.getLayoutY)
 
     n.setOnMouseDragged((event) =>
       n.setTranslateX(event.getSceneX - mouseAnchorX )
-      n.setTranslateY(event.getSceneY - mouseAnchorY ) )
+      n.setTranslateY(event.getSceneY - mouseAnchorY ))
 
     n.setOnMouseReleased((event) =>
-      n.setLayoutX( event.getSceneX + mouseOffsetFromNodeX)
-      n.setLayoutY( event.getSceneY + mouseOffsetFromNodeY)
-      a.x = event.getSceneX + mouseOffsetFromNodeX
-      a.y = event.getSceneY + mouseOffsetFromNodeY
+      if checkIntersection( n, b ) then
+        n.setLayoutX( priorPositionX)
+        n.setLayoutY( priorPositionY)
+      else
+        n.setLayoutX( event.getSceneX + mouseOffsetFromNodeX)
+        n.setLayoutY( event.getSceneY + mouseOffsetFromNodeY)
+        a.x = event.getSceneX + mouseOffsetFromNodeX
+        a.y = event.getSceneY + mouseOffsetFromNodeY
       n.setTranslateX(0)
       n.setTranslateY(0))
 
 /** Ikkuna jonka avulla voidaan vaihtaa kuvion väriä */
 class furnitureInfoPanel(n: Furniture, addTo: Pane) extends VBox:
-
   this.prefHeight = 100
   this.prefWidth = 200
   background = Background.fill(White)
@@ -96,5 +119,4 @@ class furnitureInfoPanel(n: Furniture, addTo: Pane) extends VBox:
 
 
   this.children = Array( label1, colorPicker, submitButton )
-
 
