@@ -1,5 +1,6 @@
 import javafx.geometry
 import javafx.scene.canvas
+import javafx.scene.input.MouseButton
 import scalafx.geometry.{Insets, Point2D}
 import scalafx.scene.control.{Button, ColorPicker, Label}
 import scalafx.scene.layout.{Background, GridPane, HBox, Pane, VBox}
@@ -7,12 +8,13 @@ import scalafx.scene.paint.Color.{Blue, Green, White}
 import scalafx.scene.shape.{Circle, Rectangle, Shape}
 import scalafx.scene.text.Font
 import scalafx.geometry
-import scalafx.scene.Node
+import scalafx.scene.{Node, Scene}
 import scalafx.scene.canvas.Canvas
 import scalafx.scene.input.MouseEvent.MouseMoved
 import scalafx.scene.shape.Shape.sfxShape2jfx
 import scalafx.scene.SceneIncludes.jfxColor2sfx
 import scalafx.scene.SceneIncludes.jfxShape2sfx
+import scalafx.stage.{Popup, Stage}
 
 import java.awt.MouseInfo
 import scala.collection.mutable.ListBuffer
@@ -42,8 +44,9 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
       addTo.children += shape
       val draggableMaker = new DraggableMaker()
       draggableMaker.makeDraggable( newOne, listOfFurniture )
-      newOne.shape.onMouseClicked = (event) =>
-        addTo.children += new furnitureInfoPanel(newOne, addTo)
+      newOne.shape.onMouseClicked  = (event) =>
+        if event.getButton == MouseButton.SECONDARY then
+          popMaker(newOne).show()
       listOfFurniture += newOne
       println(listOfFurniture)
 
@@ -103,21 +106,29 @@ class DraggableMaker:
       n.setTranslateX(0)
       n.setTranslateY(0))
 
-/** Ikkuna jonka avulla voidaan vaihtaa kuvion väriä */
-class furnitureInfoPanel(n: Furniture, addTo: Pane) extends VBox:
-  this.prefHeight = 100
-  this.prefWidth = 200
-  background = Background.fill(White)
+/** Metodi, joka tuottaa popUp ikkunan huonekalun värin vaihtamiseksi */
+
+def popUpMaker(n: Furniture): Stage =
+  val stage = new Stage()
+  stage.setWidth(300)
+  stage.setHeight(300)
+  stage.setX( 300 )
+  stage.setY( 300 )
+
+  val pane = new VBox()
 
   val label1 = new Label("Modify this piece of furniture")
   val label2 = new Label("Change the color")
-  val colorPicker = ColorPicker( Blue )
+  val colorPicker = ColorPicker( n.color )
 
   val submitButton = new Button( "Submit changes"):
     onAction = (event) =>
       n.changeColor( colorPicker.getValue )
-      addTo.children.remove(this)
+      stage.close()
+  pane.children = Array( label1, colorPicker, submitButton )
 
+  val scene = new Scene(pane)
 
-  this.children = Array( label1, colorPicker, submitButton )
+  stage.setScene(scene)
 
+  stage

@@ -78,7 +78,6 @@ object DesingGUI extends JFXApp3:
       children = Array(stack, sidePanel)
 
 
-
 /**    Saving code of popUp for possible later use
  *
  * val popUp = new VBox():
