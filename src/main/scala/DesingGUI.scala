@@ -124,7 +124,6 @@ object DesingGUI extends JFXApp3:
       spacing = 10
       background = Background.fill(White)
       children = Array(addButton)
-    val n = new furnitureInfoPanel(testFurniture, root2)
     sidePanel.children = Array(lampPanel, tablePanel, sofaPanel)
     root.children = Array(mainView, bottomBar)
 

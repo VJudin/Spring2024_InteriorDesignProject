@@ -11,7 +11,7 @@ import scalafx.geometry
 import scalafx.scene.{Node, Scene}
 import scalafx.scene.canvas.Canvas
 import scalafx.scene.input.MouseEvent.MouseMoved
-import scalafx.scene.shape.Shape.sfxShape2jfx
+import scalafx.scene.shape.Shape.{intersect, sfxShape2jfx}
 import scalafx.scene.SceneIncludes.jfxColor2sfx
 import scalafx.scene.SceneIncludes.jfxShape2sfx
 import scalafx.stage.{Popup, Stage}
@@ -46,7 +46,7 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
       draggableMaker.makeDraggable( newOne, listOfFurniture )
       newOne.shape.onMouseClicked  = (event) =>
         if event.getButton == MouseButton.SECONDARY then
-          popMaker(newOne).show()
+          popUpMaker(newOne).show()
       listOfFurniture += newOne
       println(listOfFurniture)
 
@@ -115,17 +115,27 @@ def popUpMaker(n: Furniture): Stage =
   stage.setX( 300 )
   stage.setY( 300 )
 
-  val pane = new VBox()
+  val pane = new VBox():
+    margin = Insets(20)
+    spacing = 20
+    padding = Insets(20, 20, 20, 20)
+
+
 
   val label1 = new Label("Modify this piece of furniture")
   val label2 = new Label("Change the color")
   val colorPicker = ColorPicker( n.color )
+  val shape = n.copy().shape
+  shape.fill = n.color
+
+  colorPicker.onAction = (event) => shape.fill = colorPicker.getValue
 
   val submitButton = new Button( "Submit changes"):
     onAction = (event) =>
       n.changeColor( colorPicker.getValue )
       stage.close()
-  pane.children = Array( label1, colorPicker, submitButton )
+
+  pane.children = Array( label1, shape, colorPicker, submitButton )
 
   val scene = new Scene(pane)
 
