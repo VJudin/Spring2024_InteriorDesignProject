@@ -5,20 +5,25 @@ import scalafx.geometry.Insets
 import scalafx.scene.Scene
 import scalafx.scene.canvas.Canvas
 import scalafx.scene.control.{Button, Label, ScrollPane, TextField}
-import scalafx.scene.image.{Image, ImageView}
+import scalafx.scene.image.{Image, ImageView, WritableImage}
 import scalafx.scene.input.MouseDragEvent
 import scalafx.scene.layout.{Background, ColumnConstraints, GridPane, HBox, Pane, RowConstraints, StackPane, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.{Circle, Ellipse, Rectangle, Shape}
 import scalafx.scene.paint.Color.*
 import scalafx.stage.{FileChooser, Popup}
+import scalafx.stage.StageIncludes.jfxFileChooser2sfx
 
 import java.awt.Desktop
 import java.awt.event.{MouseEvent, MouseListener, MouseMotionListener}
 import java.io.FileInputStream
 import scala.collection.mutable.ListBuffer
 import scalafx.Includes.jfxImage2sfx
+import scalafx.beans.property.ReadOnlyDoubleProperty
+import scalafx.embed.swing.SwingFXUtils
 import scalafx.stage.FileChooser.ExtensionFilter
+
+import javax.imageio.ImageIO
 
 /** Luokan alku, johon voi jo lisätä oman pohjapiirrustuksen, ei käsittele virheellisiä syötteitä **/
 
@@ -73,7 +78,7 @@ object DesingGUI extends JFXApp3:
     val tablePanel = new FurniturePanel( testFurniture2, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
     val lampPanel = new FurniturePanel( testFurniture3, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
     val sofaTablePanel = new FurniturePanel( testFurniture4, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
-    
+
 
     var mainScene = new ImageView(Image(FileInputStream("/Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/test/piirrustus.jpeg"))):
       fitHeight = stage.height.toDouble - 70
@@ -103,14 +108,15 @@ object DesingGUI extends JFXApp3:
       text1.promptText = "Add the path to your floorplan here"
       children = Array( label, text1, button ) */
 
-    val fileChooser = new FileChooser():
-      title = "Open image of floorplan"
-      extensionFilters.add( ExtensionFilter("jpg and png", Seq("*.jpg", "*.png")) )
 
     //val scene2 = Scene(parent = popUp)
 
+
+
     val addButton = new Button( "Add floorplan"):
       onAction = (event) =>
+        val fileChooser = new FileChooser():
+          extensionFilters.add( ExtensionFilter("jpg and png", Seq("*.jpg", "*.png")) )
         val floorplan = fileChooser.showOpenDialog(stage)
         if floorplan != null then
           mainScene = new ImageView(Image(FileInputStream(floorplan.getAbsolutePath))):
@@ -120,6 +126,18 @@ object DesingGUI extends JFXApp3:
           stack.children = Array( mainScene, root2)
 
 
+    val saveButton = new Button( "Save floorplan" ):
+      onAction = (event) =>
+        val fileChooser = new FileChooser():
+          extensionFilters.add( ExtensionFilter("jpg and png", Seq("*.jpg", "*.png")) )
+        fileChooser.setTitle("Save file")
+        val fileToSave = fileChooser.showSaveDialog(stage)
+        if fileToSave != null then
+          var writable = new WritableImage( mainScene.getFitWidth.toInt, mainScene.getFitHeight.toInt)
+          stack.snapshot(null, writable)
+          var rendered = SwingFXUtils.fromFXImage(writable, null)
+          ImageIO.write(rendered, "png", fileToSave)
+
 
     val bottomBar = new HBox():
       padding = Insets.apply(10, 10, 10, 10)
@@ -127,7 +145,7 @@ object DesingGUI extends JFXApp3:
       background = Background.fill(White)
 
 
-    bottomBar.children = Array(addButton)
+    bottomBar.children = Array(addButton, saveButton)
     sidePanel.children = Array(lampPanel, tablePanel, sofaPanel, sofaTablePanel )
     root.children = Array(mainView, bottomBar)
 
