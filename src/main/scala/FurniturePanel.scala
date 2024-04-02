@@ -48,10 +48,9 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
         if event.getButton == MouseButton.SECONDARY then
           popUpMaker(newOne).show()
       listOfFurniture += newOne
-      println(listOfFurniture)
+      println( listOfFurniture )
 
-
-  this.children = Array( furnitureName, f.shape, addButton)
+  this.children = Array( furnitureName, f.shape, addButton )
 
 
 /** Tekee huonekaluista liikuteltavia */
@@ -80,7 +79,6 @@ class DraggableMaker:
 
   def makeDraggable( a: Furniture, b: ListBuffer[Furniture] ) =
     var n = a.shape
-    var c = b.map( x => x.shape)
 
     n.setOnMousePressed((event) =>
       mouseAnchorX = event.getSceneX

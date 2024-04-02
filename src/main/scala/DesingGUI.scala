@@ -4,12 +4,12 @@ import scalafx.event.EventHandler
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
 import scalafx.scene.canvas.Canvas
-import scalafx.scene.control.{Button, Label, TextField}
+import scalafx.scene.control.{Button, Label, ScrollPane, TextField}
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.input.MouseDragEvent
 import scalafx.scene.layout.{Background, ColumnConstraints, GridPane, HBox, Pane, RowConstraints, StackPane, VBox}
 import scalafx.scene.paint.Color
-import scalafx.scene.shape.{Circle, Rectangle, Shape}
+import scalafx.scene.shape.{Circle, Ellipse, Rectangle, Shape}
 import scalafx.scene.paint.Color.*
 import scalafx.stage.{FileChooser, Popup}
 
@@ -28,14 +28,20 @@ object DesingGUI extends JFXApp3:
       title = "Interior Design"
       width = 1000
       height = 600
+      resizable = false
 
     val root = VBox()
+
 
     val scene1 = Scene(parent = root)
     stage.scene = scene1
 
     val sidePanel = new VBox()
-    
+    val scroll =  new ScrollPane()
+    scroll.background = Background.fill(White)
+    scroll.prefViewportHeight = stage.height.toDouble - 70
+    scroll.prefViewportWidth = stage.width.toDouble / 4
+    scroll.setContent( sidePanel )
 
     val rectangle2 = new Rectangle:
       x = 275
@@ -55,14 +61,16 @@ object DesingGUI extends JFXApp3:
       prefHeight = stage.height.toDouble - 70
       prefWidth  = stage.width.toDouble * 3/4
 
-
-    val testFurniture = new Furniture("Sofa", 60, 60, true, Rectangle(60, 60), 0, 0, Red, false)
-    val testFurniture2 = new Furniture( "Table", 30, 30, true, Circle(40), 0, 0, Blue, false)
-    val testFurniture3 = new Furniture( "Lamp", 20, 20, false, Circle(20), 0, 0, Yellow, true)
+/** Testi huonekaluja ja huonekaluikkunoita */
+    val testFurniture = new Furniture("Sofa", 60, 60, true, Rectangle(60, 60), 300, 300, Red, false)
+    val testFurniture2 = new Furniture( "Table", 40, 40, true, Circle(40), 200, 200, Blue, false)
+    val testFurniture3 = new Furniture( "Lamp", 20, 20, false, Circle(20), 100, 100, Yellow, true)
+    val testFurniture4 = new Furniture( "Coffee table", 30, 20, true, Ellipse(100, 100, 30, 20), 100, 100, Green, false)
     val allFurniture = ListBuffer[Furniture]()
     val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
     val tablePanel = new FurniturePanel( testFurniture2, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
     val lampPanel = new FurniturePanel( testFurniture3, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
+    val sofaTablePanel = new FurniturePanel( testFurniture4, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
     
 
     var mainScene = new ImageView(Image(FileInputStream("/Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/test/piirrustus.jpeg"))):
@@ -75,7 +83,7 @@ object DesingGUI extends JFXApp3:
 
 
     val mainView = new HBox():
-      children = Array(stack, sidePanel)
+      children = Array(stack, scroll)
 
 
 /**    Saving code of popUp for possible later use
@@ -110,13 +118,6 @@ object DesingGUI extends JFXApp3:
           stack.children.clear()
           stack.children = Array( mainScene, root2)
 
-    /** Huonekalujen liikuttamiseen liittyvää koodia*/
-    var mouseX = 0.0
-    var mouseY = 0.0
-    var f = new Rectangle():
-      width = 30
-      height = 60
-
 
 
     val bottomBar = new HBox():
@@ -124,7 +125,7 @@ object DesingGUI extends JFXApp3:
       spacing = 10
       background = Background.fill(White)
       children = Array(addButton)
-    sidePanel.children = Array(lampPanel, tablePanel, sofaPanel)
+    sidePanel.children = Array(lampPanel, tablePanel, sofaPanel, sofaTablePanel )
     root.children = Array(mainView, bottomBar)
 
 

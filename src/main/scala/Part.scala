@@ -1,6 +1,6 @@
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Shape.sfxShape2jfx
-import scalafx.scene.shape.{Circle, Rectangle, Shape}
+import scalafx.scene.shape.{Circle, Ellipse, Rectangle, Shape}
 
 /** Alustava luokkarakenne, täytyy tehdä valmiiksi myöhemmin **/
 
@@ -33,6 +33,9 @@ class Furniture( val fname: String,  width: Int, lenght: Int, val canHaveOnTop: 
           this.height = f.lenght.toDouble
         case shape: Circle => new Circle:
           radius = f.width.toDouble
+        case  shape: Ellipse => new Ellipse:
+          this.radiusX = f.width
+          this.radiusY = f.lenght
     new Furniture( fname, width, lenght, canHaveOnTop, shapeOf, 0.0, 0.0, color, canBePlacedOnTop)
     
   def compare( second: Furniture ): Boolean = f.fname == second.fname && f.lenght == second.lenght && f.width == second.width && f.shape == second.shape && f.color == second.color && f.x == second.x && f.y == second.y
