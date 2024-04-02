@@ -1,6 +1,7 @@
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Shape.sfxShape2jfx
 import scalafx.scene.shape.{Circle, Ellipse, Rectangle, Shape}
+import scalafx.scene.text.FontWeight.Black
 
 /** Alustava luokkarakenne, täytyy tehdä valmiiksi myöhemmin **/
 
@@ -9,9 +10,6 @@ class Part ( name: String, var width: Int, var lenght: Int, canHaveOnTop: Boolea
   def changeSize( w: Int, l: Int) =
     width = w
     lenght = l
-
-class Wall(width: Int, length: Int, s: Boolean,  shape: Rectangle, x: Int, y: Int) extends Part("Wall", width, length, false,  Rectangle(width, length), x, y):
-  ???
 
 class Furniture( val fname: String,  width: Int, lenght: Int, val canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double, var color: Color, val canBePlacedOnTop: Boolean) extends Part (fname, width: Int, lenght: Int, canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double):
 
@@ -39,4 +37,6 @@ class Furniture( val fname: String,  width: Int, lenght: Int, val canHaveOnTop: 
     new Furniture( fname, width, lenght, canHaveOnTop, shapeOf, 0.0, 0.0, color, canBePlacedOnTop)
     
   def compare( second: Furniture ): Boolean = f.fname == second.fname && f.lenght == second.lenght && f.width == second.width && f.shape == second.shape && f.color == second.color && f.x == second.x && f.y == second.y
-  
+
+class Wall(width: Int, length: Int, x: Int, y: Int, color: Color) extends Furniture("Wall", width, length, false,  Rectangle(width, length), x, y, color, false ):
+  this.shape.fill = Color.Black

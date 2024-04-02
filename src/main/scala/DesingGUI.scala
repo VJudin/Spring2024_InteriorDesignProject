@@ -17,6 +17,8 @@ import java.awt.Desktop
 import java.awt.event.{MouseEvent, MouseListener, MouseMotionListener}
 import java.io.FileInputStream
 import scala.collection.mutable.ListBuffer
+import scalafx.Includes.jfxImage2sfx
+import scalafx.stage.FileChooser.ExtensionFilter
 
 /** Luokan alku, johon voi jo lisätä oman pohjapiirrustuksen, ei käsittele virheellisiä syötteitä **/
 
@@ -76,8 +78,6 @@ object DesingGUI extends JFXApp3:
     var mainScene = new ImageView(Image(FileInputStream("/Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/test/piirrustus.jpeg"))):
       fitHeight = stage.height.toDouble - 70
       fitWidth = stage.width.toDouble * 3/4
-
-
     var stack = new StackPane():
       children = Array( mainScene, root2)
 
@@ -105,6 +105,7 @@ object DesingGUI extends JFXApp3:
 
     val fileChooser = new FileChooser():
       title = "Open image of floorplan"
+      extensionFilters.add( ExtensionFilter("jpg and png", Seq("*.jpg", "*.png")) )
 
     //val scene2 = Scene(parent = popUp)
 
@@ -124,7 +125,9 @@ object DesingGUI extends JFXApp3:
       padding = Insets.apply(10, 10, 10, 10)
       spacing = 10
       background = Background.fill(White)
-      children = Array(addButton)
+
+
+    bottomBar.children = Array(addButton)
     sidePanel.children = Array(lampPanel, tablePanel, sofaPanel, sofaTablePanel )
     root.children = Array(mainView, bottomBar)
 
@@ -133,3 +136,16 @@ object DesingGUI extends JFXApp3:
 
 end DesingGUI
 
+/** EI TOIMI AINAKAAN VIELÄ */
+def wallAdder( where: Pane, from: Image, allFurniture: ListBuffer[Furniture] ) =
+  val reader = from.getPixelReader
+  val untilX = where.width.toInt
+  val untilY = where.height.toInt
+  for x <- 0 to(untilX, 1) do
+    for y <- 0 to(untilY, 1) do
+      if reader.getColor( x, y ) == Black then
+        var newWall = Wall(1, 1, x, y, Black)
+        where.children += newWall.shape
+        newWall.shape.setLayoutX(x)
+        newWall.shape.setLayoutY(y)
+        allFurniture += newWall
