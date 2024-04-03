@@ -14,6 +14,7 @@ import scalafx.scene.input.MouseEvent.MouseMoved
 import scalafx.scene.shape.Shape.{intersect, sfxShape2jfx}
 import scalafx.scene.SceneIncludes.jfxColor2sfx
 import scalafx.scene.SceneIncludes.jfxShape2sfx
+import scalafx.scene.transform.Rotate
 import scalafx.stage.{Popup, Stage}
 
 import java.awt.MouseInfo
@@ -41,7 +42,11 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
     onAction = (event) =>
       var newOne = f.copy()
       val shape = newOne.shape
+      newOne.x = addTo.prefWidth.toDouble / 2
+      newOne.y = addTo.prefHeight.toDouble / 2
       addTo.children += shape
+      shape.setLayoutX( newOne.x )
+      shape.setLayoutY( newOne.y )
       val draggableMaker = new DraggableMaker()
       draggableMaker.makeDraggable( newOne, listOfFurniture )
       newOne.shape.onMouseClicked  = (event) =>
@@ -63,6 +68,7 @@ class DraggableMaker:
   private var priorPositionX = 0.0
   private var priorPositionY = 0.0
 
+  /** Tarkistaa, onko huonekalun kohdalla toista huonekalua, jonka päälle se ei voi mennä */
   def checkIntersection( s: Furniture, b: ListBuffer[Furniture] ) =
     var collisionDetected = false
     var d = b.filter( x => !x.equals(s))
