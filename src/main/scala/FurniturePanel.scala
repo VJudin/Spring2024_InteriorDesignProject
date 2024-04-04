@@ -4,7 +4,7 @@ import javafx.scene.input.MouseButton
 import scalafx.geometry.{Insets, Point2D}
 import scalafx.scene.control.{Button, ColorPicker, Label}
 import scalafx.scene.layout.{Background, GridPane, HBox, Pane, VBox}
-import scalafx.scene.paint.Color.{Blue, Green, White}
+import scalafx.scene.paint.Color.{Blue, Green, Red, White}
 import scalafx.scene.shape.{Circle, Rectangle, Shape}
 import scalafx.scene.text.Font
 import scalafx.geometry
@@ -51,7 +51,7 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
       draggableMaker.makeDraggable( newOne, listOfFurniture )
       newOne.shape.onMouseClicked  = (event) =>
         if event.getButton == MouseButton.SECONDARY then
-          popUpMaker(newOne).show()
+          popUpMaker(newOne, addTo, listOfFurniture).show()
       listOfFurniture += newOne
       println( listOfFurniture )
 
@@ -112,10 +112,10 @@ class DraggableMaker:
 
 /** Metodi, joka tuottaa popUp ikkunan huonekalun värin vaihtamiseksi */
 
-def popUpMaker(n: Furniture): Stage =
+def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Furniture] ): Stage =
   val stage = new Stage()
   stage.setWidth(300)
-  stage.setHeight(300)
+  stage.setHeight(400)
   stage.setX( 300 )
   stage.setY( 300 )
 
@@ -139,7 +139,14 @@ def popUpMaker(n: Furniture): Stage =
       n.changeColor( colorPicker.getValue )
       stage.close()
 
-  pane.children = Array( label1, shape, colorPicker, submitButton )
+  val deleteButton = new Button( "Delete this furniture"):
+    onAction = (event) =>
+      var indexOf = furnitureIsIn.children.indexOf(n.shape)
+      furnitureIsIn.getChildren.remove( indexOf )
+      listOfFurniture.remove(indexOf)
+      stage.close()
+
+  pane.children = Array( label1, shape, colorPicker, submitButton, deleteButton )
 
   val scene = new Scene(pane)
 
