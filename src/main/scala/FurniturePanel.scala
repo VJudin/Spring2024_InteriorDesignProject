@@ -5,7 +5,7 @@ import scalafx.geometry.{Insets, Point2D}
 import scalafx.scene.control.{Button, ColorPicker, Label}
 import scalafx.scene.layout.{Background, GridPane, HBox, Pane, VBox}
 import scalafx.scene.paint.Color.{Blue, Green, Red, White}
-import scalafx.scene.shape.{Circle, Rectangle, Shape}
+import scalafx.scene.shape.{Circle, Ellipse, Rectangle, Shape}
 import scalafx.scene.text.Font
 import scalafx.geometry
 import scalafx.scene.{Node, Scene}
@@ -96,7 +96,8 @@ class DraggableMaker:
 
     n.setOnMouseDragged((event) =>
       n.setTranslateX(event.getSceneX - mouseAnchorX )
-      n.setTranslateY(event.getSceneY - mouseAnchorY ))
+      n.setTranslateY(event.getSceneY - mouseAnchorY )
+      )
 
     n.setOnMouseReleased((event) =>
       if checkIntersection( a, b ) then
@@ -109,6 +110,7 @@ class DraggableMaker:
         a.y = event.getSceneY + mouseOffsetFromNodeY
       n.setTranslateX(0)
       n.setTranslateY(0))
+
 
 /** Metodi, joka tuottaa popUp ikkunan huonekalun värin vaihtamiseksi */
 
@@ -129,14 +131,18 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
   val label1 = new Label("Modify this piece of furniture")
   val label2 = new Label("Change the color")
   val colorPicker = ColorPicker( n.color )
-  val shape = n.copy().shape
+  val copyOfFurniture = n.copy()
+  val shape = copyOfFurniture.shape
   shape.fill = n.color
+  shape.getTransforms.addAll( n.shape.getTransforms )
 
   colorPicker.onAction = (event) => shape.fill = colorPicker.getValue
 
   val submitButton = new Button( "Submit changes"):
     onAction = (event) =>
       n.changeColor( colorPicker.getValue )
+      n.shape.getTransforms.clear()
+      n.shape.getTransforms.addAll( copyOfFurniture.shape.getTransforms )
       stage.close()
 
   val deleteButton = new Button( "Delete this furniture"):
@@ -146,7 +152,15 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
       listOfFurniture.remove(indexOf)
       stage.close()
 
-  pane.children = Array( label1, shape, colorPicker, submitButton, deleteButton )
+  val rotateButton = new Button( "Rotate this furniture"):
+    onAction = (event) =>
+      n.shape match
+        case shape: Rectangle =>
+          copyOfFurniture.shape.getTransforms.add( new Rotate( 45, n.width / 2, n.lenght / 2 ))
+        case _ =>
+          copyOfFurniture.shape.getTransforms.add( new Rotate( 45, 0, 0 ) )
+
+  pane.children = Array( label1, shape, colorPicker, submitButton, rotateButton, deleteButton )
 
   val scene = new Scene(pane)
 

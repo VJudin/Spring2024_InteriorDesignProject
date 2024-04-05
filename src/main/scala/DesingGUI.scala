@@ -50,26 +50,16 @@ object DesingGUI extends JFXApp3:
     scroll.prefViewportWidth = stage.width.toDouble / 4
     scroll.setContent( sidePanel )
 
-    val rectangle2 = new Rectangle:
-      x = 275
-      y = 175
-      width = stage.width.toDouble / 4
-      height = (stage.height.toDouble-70) / 3
-      fill = Red
-
-    val rectangle3 = new Rectangle:
-      x = 275
-      y = 175
-      width = stage.width.toDouble / 4
-      height = (stage.height.toDouble-70) / 3
-      fill = Green
-
     val root2 = new Pane():
       prefHeight = stage.height.toDouble - 70
       prefWidth  = stage.width.toDouble * 3/4
 
+    var floorPlanWidth = 1000
+    var floorPlanHeight = 600
+
+
 /** Testi huonekaluja ja huonekaluikkunoita */
-    val testFurniture = new Furniture("Sofa", 60, 30, true, Rectangle(60, 30), 300, 300, Red, false)
+    val testFurniture = new Furniture("Sofa", 60, 30, true, Rectangle(60, 30), 300, 300, Pink, false)
     val testFurniture2 = new Furniture( "Table", 40, 40, true, Circle(40), 200, 200, Blue, false)
     val testFurniture3 = new Furniture( "Lamp", 20, 20, false, Circle(20), 100, 100, Yellow, true)
     val testFurniture4 = new Furniture( "Coffee table", 30, 20, true, Ellipse(100, 100, 30, 20), 100, 100, Green, false)
