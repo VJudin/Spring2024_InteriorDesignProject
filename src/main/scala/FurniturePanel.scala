@@ -9,15 +9,11 @@ import scalafx.scene.shape.{Circle, Ellipse, Rectangle, Shape}
 import scalafx.scene.text.Font
 import scalafx.geometry
 import scalafx.scene.{Node, Scene}
-import scalafx.scene.canvas.Canvas
-import scalafx.scene.input.MouseEvent.MouseMoved
 import scalafx.scene.shape.Shape.{intersect, sfxShape2jfx}
 import scalafx.scene.SceneIncludes.jfxColor2sfx
-import scalafx.scene.SceneIncludes.jfxShape2sfx
 import scalafx.scene.transform.Rotate
 import scalafx.stage.{Popup, Stage}
 
-import java.awt.MouseInfo
 import scala.collection.mutable.ListBuffer
 
 
@@ -53,7 +49,6 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
         if event.getButton == MouseButton.SECONDARY then
           popUpMaker(newOne, addTo, listOfFurniture).show()
       listOfFurniture += newOne
-      println( listOfFurniture )
 
   this.children = Array( furnitureName, f.shape, addButton )
 
@@ -115,17 +110,34 @@ class DraggableMaker:
 /** Metodi, joka tuottaa popUp ikkunan huonekalun värin vaihtamiseksi */
 
 def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Furniture] ): Stage =
+
+
   val stage = new Stage()
-  stage.setWidth(300)
-  stage.setHeight(400)
+  if n.width < n.lenght then
+    stage.setHeight(200 + n.lenght)
+    stage.setWidth(300 + n.lenght)
+  else
+    stage.setHeight( 200 + n.width )
+    stage.setWidth(300 + n.width)
   stage.setX( 300 )
   stage.setY( 300 )
 
   val pane = new VBox():
-    margin = Insets(20)
+    margin = Insets(10)
+    spacing = 5
+    padding = Insets(10, 10, 10, 10)
+
+  val changables = new HBox():
+    spacing = 20
+
+  val changePanel = new VBox():
+    prefHeight = stage.height.toDouble
+    prefWidth = 400
     spacing = 20
     padding = Insets(20, 20, 20, 20)
 
+  val submitOrDelete = new HBox():
+    spacing = 20
 
 
   val label1 = new Label("Modify this piece of furniture")
@@ -136,6 +148,25 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
   shape.fill = n.color
   shape.getTransforms.addAll( n.shape.getTransforms )
 
+
+    val shapePanel = new VBox():
+      if n.width < n.lenght then
+        prefHeight = n.lenght
+        prefWidth = n.lenght
+        padding = Insets( n.lenght / 2, 20, 20, 20 )
+      else
+        prefHeight = n.width
+        prefWidth = n.width
+        padding = Insets( n.width / 2, 20, 20, 20 )
+
+
+  val fill = new Rectangle():
+    width = stage.width.toDouble
+    if n.width < n.lenght then
+       height = n.lenght
+    else
+      height = n.width
+  fill.fill = White
   colorPicker.onAction = (event) => shape.fill = colorPicker.getValue
 
   val submitButton = new Button( "Submit changes"):
@@ -160,7 +191,11 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
         case _ =>
           copyOfFurniture.shape.getTransforms.add( new Rotate( 45, 0, 0 ) )
 
-  pane.children = Array( label1, shape, colorPicker, submitButton, rotateButton, deleteButton )
+  shapePanel.children = Array( shape )
+  changePanel.children = Array(colorPicker, rotateButton)
+  changables.children = Array( shapePanel, changePanel )
+  submitOrDelete.children = Array( submitButton, deleteButton )
+  pane.children = Array(label1, changables, submitOrDelete )
 
   val scene = new Scene(pane)
 

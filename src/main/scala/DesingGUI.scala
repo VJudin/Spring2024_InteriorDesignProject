@@ -54,12 +54,12 @@ object DesingGUI extends JFXApp3:
       prefHeight = stage.height.toDouble - 70
       prefWidth  = stage.width.toDouble * 3/4
 
-    var floorPlanWidth = 1000
-    var floorPlanHeight = 600
+    var floorPlanScaleX = 1000 / stage.width.toDouble
+    var floorPlanScaleY = 600 / stage.height.toDouble
 
 
 /** Testi huonekaluja ja huonekaluikkunoita */
-    val testFurniture = new Furniture("Sofa", 60, 30, true, Rectangle(60, 30), 300, 300, Pink, false)
+    val testFurniture = new Furniture("Sofa", 200, 75, true, Rectangle(200, 75), 300, 300, Pink, false)
     val testFurniture2 = new Furniture( "Table", 40, 40, true, Circle(40), 200, 200, Blue, false)
     val testFurniture3 = new Furniture( "Lamp", 20, 20, false, Circle(20), 100, 100, Yellow, true)
     val testFurniture4 = new Furniture( "Coffee table", 30, 20, true, Ellipse(100, 100, 30, 20), 100, 100, Green, false)
