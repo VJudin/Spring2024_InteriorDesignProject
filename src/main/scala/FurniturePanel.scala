@@ -143,7 +143,6 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
 
 
   val label1 = new Label("Modify this piece of furniture")
-  val label2 = new Label("Change the color")
   val colorPicker = ColorPicker( n.color )
   val copyOfFurniture = n.copy()
   val shape = copyOfFurniture.shape
@@ -153,22 +152,14 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
 
     val shapePanel = new VBox():
       if n.width < n.lenght then
-        prefHeight = n.lenght
-        prefWidth = n.lenght
-        padding = Insets( n.lenght / 2, 20, 20, 20 )
+        minHeight = n.lenght
+        minWidth = n.lenght
+        padding = Insets( n.lenght / 2, n.width/2, 20, 20 )
       else
-        prefHeight = n.width
-        prefWidth = n.width
-        padding = Insets( n.width / 2, 20, 20, 20 )
+        minHeight = n.width
+        minWidth = n.width
+        padding = Insets( n.width / 2, n.width / 2, 20, 20 )
 
-
-  val fill = new Rectangle():
-    width = stage.width.toDouble
-    if n.width < n.lenght then
-       height = n.lenght
-    else
-      height = n.width
-  fill.fill = White
   colorPicker.onAction = (event) => shape.fill = colorPicker.getValue
 
   val submitButton = new Button( "Submit changes"):

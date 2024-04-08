@@ -79,6 +79,8 @@ object DesingGUI extends JFXApp3:
 
     var floorPlanScaleX = (stage.width.toDouble * 3/4) / 900
     var floorPlanScaleY = (stage.height.toDouble - 70) / 600
+    var planningScaleX = (stage.width.toDouble * 3 / 4) / 400
+    var planningScaleY = (stage.height.toDouble - 70) / 200
 
 
 /** Testi huonekaluja ja huonekaluikkunoita */
@@ -92,8 +94,12 @@ object DesingGUI extends JFXApp3:
     val lampPanel = new FurniturePanel( testFurniture3, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture, floorPlanScaleX, floorPlanScaleY)
     val sofaTablePanel = new FurniturePanel( testFurniture4, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture, floorPlanScaleX, floorPlanScaleY)
 
-    val testWall = new Wall(20, 200, 300, 300, Black)
-    val wallPanel = new FurniturePanel(testWall, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allFurniture, floorPlanScaleX, floorPlanScaleY)
+    val testWall = new Wall(10, 200, 300, 300, Black)
+    val testDoor = new Door(100, 100, 300, 300, Black)
+    val testWindow = new Window(100, 300, 300)
+    val wallPanel = new FurniturePanel(testWall, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allFurniture, planningScaleX, planningScaleY)
+    val doorPanel = new FurniturePanel(testDoor,(stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allFurniture, planningScaleX, planningScaleY)
+    val windowPanel = new FurniturePanel( testWindow, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allFurniture, planningScaleX, planningScaleY)
 
 
     var mainScene = new ImageView(Image(FileInputStream("/Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/test/piirrustus.jpeg"))):
@@ -130,15 +136,14 @@ object DesingGUI extends JFXApp3:
       children = Array( label, text1, button ) */
 
 
-    //val scene2 = Scene(parent = popUp)
-
     val addButton = new Button( "Add floorplan"):
       onAction = (event) =>
         val fileChooser = new FileChooser():
           extensionFilters.add( ExtensionFilter("jpg and png", Seq("*.jpg", "*.png")) )
         val floorplan = fileChooser.showOpenDialog(stage)
         if floorplan != null then
-          mainScene = new ImageView(Image(FileInputStream(floorplan.getAbsolutePath))):
+          val image = Image(FileInputStream(floorplan.getAbsolutePath))
+          mainScene = new ImageView(image):
             fitHeight = stage.height.toDouble - 70
             fitWidth = stage.width.toDouble * 3/4
           stack.children.clear()
@@ -156,10 +161,6 @@ object DesingGUI extends JFXApp3:
           stack.snapshot(null, writable)
           var rendered = SwingFXUtils.fromFXImage(writable, null)
           ImageIO.write(rendered, "png", fileToSave)
-
-
-
-
 
     val bottomBar = new HBox():
       padding = Insets.apply(10, 10, 10, 10)
@@ -183,7 +184,7 @@ object DesingGUI extends JFXApp3:
 
     bottomBar.children = Array(addButton, saveButton, designYourOwnButton)
     sidePanel.children = Array(lampPanel, tablePanel, sofaPanel, sofaTablePanel )
-    sidePanel2.children = Array( wallPanel )
+    sidePanel2.children = Array( wallPanel, doorPanel, windowPanel )
     root.children = Array(mainView, bottomBar)
 
 
@@ -192,15 +193,15 @@ object DesingGUI extends JFXApp3:
 end DesingGUI
 
 /** EI TOIMI AINAKAAN VIELÄ */
-def wallAdder( where: Pane, from: Image, allFurniture: ListBuffer[Furniture] ) =
-  val reader = from.getPixelReader
-  val untilX = where.width.toInt
-  val untilY = where.height.toInt
-  for x <- 0 to(untilX, 1) do
-    for y <- 0 to(untilY, 1) do
-      if reader.getColor( x, y ) == Black then
-        var newWall = Wall(1, 1, x, y, Black)
-        where.children += newWall.shape
-        newWall.shape.setLayoutX(x)
-        newWall.shape.setLayoutY(y)
-        allFurniture += newWall
+    def wallAdder( where: Pane, from: Image, allFurniture: ListBuffer[Furniture] ) =
+      val reader = from.getPixelReader
+      val untilX = where.width.toInt
+      val untilY = where.height.toInt
+      for x <- 0 to(untilX, 1) do
+        for y <- 0 to(untilY, 1) do
+          if reader.getColor( x, y ) == Black then
+            var newWall = Wall(1, 1, x, y, Black)
+            where.children += newWall.shape
+            newWall.shape.setLayoutX(x)
+            newWall.shape.setLayoutY(y)
+            allFurniture += newWall
