@@ -4,7 +4,7 @@ import javafx.scene.input.MouseButton
 import scalafx.geometry.{Insets, Point2D}
 import scalafx.scene.control.{Button, ColorPicker, Label}
 import scalafx.scene.layout.{Background, GridPane, HBox, Pane, VBox}
-import scalafx.scene.paint.Color.{Blue, Green, Red, White}
+import scalafx.scene.paint.Color.{Blue, Green, Pink, Red, White}
 import scalafx.scene.shape.{Circle, Ellipse, Rectangle, Shape}
 import scalafx.scene.text.Font
 import scalafx.geometry

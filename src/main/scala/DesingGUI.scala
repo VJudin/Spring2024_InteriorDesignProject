@@ -39,23 +39,46 @@ object DesingGUI extends JFXApp3:
 
     val root = VBox()
 
+    val root2 = VBox()
+
 
     val scene1 = Scene(parent = root)
     stage.scene = scene1
 
     val sidePanel = new VBox()
+    val sidePanel2 = new VBox()
+
     val scroll =  new ScrollPane()
     scroll.background = Background.fill(White)
     scroll.prefViewportHeight = stage.height.toDouble - 70
     scroll.prefViewportWidth = stage.width.toDouble / 4
     scroll.setContent( sidePanel )
+    scroll.hbarPolicy = ScrollPane.ScrollBarPolicy.Never
 
-    val root2 = new Pane():
+    val scroll2 = new ScrollPane()
+    scroll2.background = Background.fill(White)
+    scroll2.prefViewportHeight = stage.height.toDouble - 70
+    scroll2.prefViewportWidth = stage.width.toDouble / 4
+    scroll2.setContent( sidePanel2 )
+    scroll2.hbarPolicy = ScrollPane.ScrollBarPolicy.Never
+
+    val furniturePane = new Pane():
       prefHeight = stage.height.toDouble - 70
       prefWidth  = stage.width.toDouble * 3/4
 
-    var floorPlanScaleX = 1000 / stage.width.toDouble
-    var floorPlanScaleY = 600 / stage.height.toDouble
+    val floorplanDesignPane = new Pane():
+      prefHeight = stage.height.toDouble - 70
+      prefWidth  = stage.width.toDouble * 3/4
+
+    val canvas = new Rectangle():
+      height = stage.height.toDouble - 70
+      width = stage.width.toDouble * 3/4
+      fill = White
+    canvas.setLayoutX(0)
+    canvas.setLayoutY(0)
+
+    var floorPlanScaleX = stage.width.toDouble / 900
+    var floorPlanScaleY = stage.height.toDouble / 600
 
 
 /** Testi huonekaluja ja huonekaluikkunoita */
@@ -64,23 +87,31 @@ object DesingGUI extends JFXApp3:
     val testFurniture3 = new Furniture( "Lamp", 20, 20, false, Circle(20), 100, 100, Yellow, true)
     val testFurniture4 = new Furniture( "Coffee table", 30, 20, true, Ellipse(100, 100, 30, 20), 100, 100, Green, false)
     val allFurniture = ListBuffer[Furniture]()
-    val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
-    val tablePanel = new FurniturePanel( testFurniture2, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
-    val lampPanel = new FurniturePanel( testFurniture3, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
-    val sofaTablePanel = new FurniturePanel( testFurniture4, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), root2, allFurniture)
+    val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
+    val tablePanel = new FurniturePanel( testFurniture2, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
+    val lampPanel = new FurniturePanel( testFurniture3, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
+    val sofaTablePanel = new FurniturePanel( testFurniture4, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
+
+    val testWall = new Wall(20, 200, 300, 300, Black)
+    val wallPanel = new FurniturePanel(testWall, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allFurniture)
 
 
     var mainScene = new ImageView(Image(FileInputStream("/Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/test/piirrustus.jpeg"))):
       fitHeight = stage.height.toDouble - 70
       fitWidth = stage.width.toDouble * 3/4
+
     var stack = new StackPane():
-      children = Array( mainScene, root2)
+      children = Array( mainScene, furniturePane)
+
+    var stack2 = new StackPane():
+      children = Array( canvas, floorplanDesignPane )
 
 
     val mainView = new HBox():
       children = Array(stack, scroll)
 
-
+    val secondView = new HBox():
+      children = Array(stack2, scroll2)
 /**    Saving code of popUp for possible later use
  *
  * val popUp = new VBox():
@@ -101,8 +132,6 @@ object DesingGUI extends JFXApp3:
 
     //val scene2 = Scene(parent = popUp)
 
-
-
     val addButton = new Button( "Add floorplan"):
       onAction = (event) =>
         val fileChooser = new FileChooser():
@@ -113,10 +142,10 @@ object DesingGUI extends JFXApp3:
             fitHeight = stage.height.toDouble - 70
             fitWidth = stage.width.toDouble * 3/4
           stack.children.clear()
-          stack.children = Array( mainScene, root2)
+          stack.children = Array( mainScene, furniturePane)
 
 
-    val saveButton = new Button( "Save floorplan" ):
+    val saveButton = new Button( "Save" ):
       onAction = (event) =>
         val fileChooser = new FileChooser():
           extensionFilters.add( ExtensionFilter("jpg and png", Seq("*.jpg", "*.png")) )
@@ -129,14 +158,32 @@ object DesingGUI extends JFXApp3:
           ImageIO.write(rendered, "png", fileToSave)
 
 
+
+
+
     val bottomBar = new HBox():
       padding = Insets.apply(10, 10, 10, 10)
       spacing = 10
       background = Background.fill(White)
 
 
-    bottomBar.children = Array(addButton, saveButton)
+    val bottomBar2 = new HBox():
+      padding = Insets.apply(10, 10, 10, 10)
+      spacing = 10
+      background = Background.fill(White)
+
+    val designYourOwnButton = new Button( "Design your own floorplan"):
+      onAction = (event) =>
+        scene1.root = root2
+        val returnButton = new Button( "Go back"):
+          onAction = (event) =>
+            scene1.root = root
+        bottomBar2.children = Array(returnButton)
+        root2.children = Array(secondView, bottomBar2)
+
+    bottomBar.children = Array(addButton, saveButton, designYourOwnButton)
     sidePanel.children = Array(lampPanel, tablePanel, sofaPanel, sofaTablePanel )
+    sidePanel2.children = Array( wallPanel )
     root.children = Array(mainView, bottomBar)
 
 
