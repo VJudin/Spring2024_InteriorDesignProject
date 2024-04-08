@@ -17,7 +17,7 @@ import scalafx.stage.{Popup, Stage}
 import scala.collection.mutable.ListBuffer
 
 
-class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, addTo: Pane, listOfFurniture: ListBuffer[Furniture] ) extends VBox:
+class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, addTo: Pane, listOfFurniture: ListBuffer[Furniture], xscale: Double, yscale: Double ) extends VBox:
 
 
   this.prefHeight = givenHeight
@@ -38,6 +38,8 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
     onAction = (event) =>
       var newOne = f.copy()
       val shape = newOne.shape
+      shape.scaleX = xscale
+      shape.scaleY = yscale
       newOne.x = addTo.prefWidth.toDouble / 2
       newOne.y = addTo.prefHeight.toDouble / 2
       addTo.children += shape

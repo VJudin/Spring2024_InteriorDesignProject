@@ -77,23 +77,23 @@ object DesingGUI extends JFXApp3:
     canvas.setLayoutX(0)
     canvas.setLayoutY(0)
 
-    var floorPlanScaleX = stage.width.toDouble / 900
-    var floorPlanScaleY = stage.height.toDouble / 600
+    var floorPlanScaleX = (stage.width.toDouble * 3/4) / 900
+    var floorPlanScaleY = (stage.height.toDouble - 70) / 600
 
 
 /** Testi huonekaluja ja huonekaluikkunoita */
     val testFurniture = new Furniture("Sofa", 200, 75, true, Rectangle(200, 75), 300, 300, Pink, false)
     val testFurniture2 = new Furniture( "Table", 40, 40, true, Circle(40), 200, 200, Blue, false)
     val testFurniture3 = new Furniture( "Lamp", 20, 20, false, Circle(20), 100, 100, Yellow, true)
-    val testFurniture4 = new Furniture( "Coffee table", 30, 20, true, Ellipse(100, 100, 30, 20), 100, 100, Green, false)
+    val testFurniture4 = new Furniture( "Coffee table", 100, 50, true, Ellipse(100, 100, 30, 20), 100, 100, Green, false)
     val allFurniture = ListBuffer[Furniture]()
-    val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
-    val tablePanel = new FurniturePanel( testFurniture2, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
-    val lampPanel = new FurniturePanel( testFurniture3, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
-    val sofaTablePanel = new FurniturePanel( testFurniture4, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
+    val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture, floorPlanScaleX, floorPlanScaleY)
+    val tablePanel = new FurniturePanel( testFurniture2, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture, floorPlanScaleX, floorPlanScaleY)
+    val lampPanel = new FurniturePanel( testFurniture3, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture, floorPlanScaleX, floorPlanScaleY)
+    val sofaTablePanel = new FurniturePanel( testFurniture4, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture, floorPlanScaleX, floorPlanScaleY)
 
     val testWall = new Wall(20, 200, 300, 300, Black)
-    val wallPanel = new FurniturePanel(testWall, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allFurniture)
+    val wallPanel = new FurniturePanel(testWall, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allFurniture, floorPlanScaleX, floorPlanScaleY)
 
 
     var mainScene = new ImageView(Image(FileInputStream("/Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/test/piirrustus.jpeg"))):
