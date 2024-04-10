@@ -1,3 +1,5 @@
+import DesingGUI.floorPlanScale
+import scalafx.scene.layout.Pane
 import scalafx.scene.shape.Shape
 
 import scala.collection.mutable.ListBuffer
@@ -26,7 +28,19 @@ class DraggableMaker:
              collisionDetected = true
     collisionDetected
 
-  def makeDraggable( a: Furniture, b: ListBuffer[Furniture] ) =
+  def isOutOfBounds(coordX: Double, coordY: Double, s: Furniture, a: Pane): Boolean =
+    val maxX = a.getWidth
+    val maxY = a.getHeight
+    val minX = -20
+    val minY = -10
+    val width = s.width * floorPlanScale
+    val height = s.lenght * floorPlanScale
+    if coordX < minX || coordY < minY || coordX + width> maxX || coordY + height > maxY then
+      true
+    else
+      false
+
+  def makeDraggable( a: Furniture, b: ListBuffer[Furniture], c: Pane ) =
     var n = a.shape
 
     n.setOnMousePressed((event) =>
@@ -44,6 +58,9 @@ class DraggableMaker:
 
     n.setOnMouseReleased((event) =>
       if checkIntersection( a, b ) then
+        n.setLayoutX( priorPositionX)
+        n.setLayoutY( priorPositionY)
+      else if isOutOfBounds(event.getSceneX + mouseOffsetFromNodeX, event.getSceneY + mouseOffsetFromNodeY, a, c) then
         n.setLayoutX( priorPositionX)
         n.setLayoutY( priorPositionY)
       else

@@ -1,7 +1,7 @@
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, ColorPicker, Label}
-import scalafx.scene.layout.{HBox, Pane, VBox}
+import scalafx.scene.layout.{GridPane, HBox, Pane, VBox}
 import scalafx.scene.shape.Rectangle
 import scalafx.scene.transform.Rotate
 import scalafx.stage.Stage
@@ -13,22 +13,32 @@ import scala.collection.mutable.ListBuffer
 def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Furniture] ): Stage =
 
   val stage = new Stage()
-  if n.width < n.lenght then
-    stage.setHeight(200 + n.lenght)
-    stage.setWidth(300 + n.lenght)
-  else
-    stage.setHeight( 200 + n.width )
-    stage.setWidth(300 + n.width)
+  stage.setHeight(500 )
+  stage.setWidth(500 )
   stage.setX( 300 )
   stage.setY( 300 )
+
+  val bigger =
+    if n.width < n.lenght then
+      n.lenght
+    else
+      n.width
+
+  val grid = new GridPane():
+    hgap = 10
+    vgap = 10
+    padding = Insets(10, 10, 10, 10)
+    prefWidth = stage.width.toDouble
+    prefHeight = stage.height.toDouble
+
 
   val pane = new VBox():
     margin = Insets(10)
     spacing = 10
-    padding = Insets(10, 10, 10, 10)
+    padding = Insets(10, 10, 10, bigger )
 
   val changables = new HBox():
-    spacing = 150
+    spacing = 20
 
   val changePanel = new VBox():
     prefHeight = stage.height.toDouble
@@ -44,17 +54,19 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
   val copyOfFurniture = n.copy()
   val shape = copyOfFurniture.shape
   shape.fill = n.color
+  shape.scaleX = 0.75
+  shape.scaleY = 0.75
   shape.getTransforms.addAll( n.shape.getTransforms )
 
   val shapePanel = new VBox():
       if n.width < n.lenght then
         minHeight = n.lenght
         minWidth = n.lenght
-        padding = Insets( n.lenght / 2, n.lenght/4 , n.lenght / 4, 20 )
+        padding = Insets( 20, 20 ,20, 20 )
       else
         minHeight = n.width
         minWidth = n.width
-        padding = Insets( n.width / 2, n.width / 4, n.width / 4, 20 )
+        padding = Insets( 20, 20, 20, 20 )
 
   colorPicker.onAction = (event) => shape.fill = colorPicker.getValue
 
@@ -80,13 +92,19 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
         case _ =>
           copyOfFurniture.shape.getTransforms.add( new Rotate( 45, 0, 0 ) )
 
-  shapePanel.children = Array( shape )
+ /** shapePanel.children = Array( shape )
   changePanel.children = Array(colorPicker, rotateButton)
   changables.children = Array( shapePanel, changePanel )
   submitOrDelete.children = Array( submitButton, deleteButton )
-  pane.children = Array(label1, changables, submitOrDelete )
+  pane.children = Array(label1, changables, submitOrDelete ) */
+  submitOrDelete.children = Array( submitButton, deleteButton )
+  grid.add(label1, 0, 0)
+  grid.add(shape, 0, 2)
+  grid.add(submitOrDelete, 0, 5,3, 1)
+  grid.add(colorPicker, 1, 1, 3, 1)
+  grid.add(rotateButton, 1, 2, 3, 1)
 
-  val scene = new Scene(pane)
+  val scene = new Scene(grid)
 
   stage.setScene(scene)
 

@@ -1,24 +1,19 @@
-import DesingGUI.floorPlanScaleX
-import javafx.geometry
-import javafx.scene.canvas
+import DesingGUI.floorPlanScale
 import javafx.scene.input.MouseButton
-import scalafx.geometry.{Insets, Point2D}
-import scalafx.scene.control.{Button, ColorPicker, Label}
-import scalafx.scene.layout.{Background, GridPane, HBox, Pane, VBox}
-import scalafx.scene.paint.Color.{Blue, Green, Pink, Red, White}
-import scalafx.scene.shape.{Circle, Ellipse, Rectangle, Shape}
+import scalafx.geometry.Insets
+import scalafx.scene.control.{Button, Label}
+import scalafx.scene.layout.{Background, Pane, VBox}
+import scalafx.scene.paint.Color.White
+import scalafx.scene.shape.Shape
 import scalafx.scene.text.Font
 import scalafx.geometry
-import scalafx.scene.{Node, Scene}
-import scalafx.scene.shape.Shape.{intersect, sfxShape2jfx}
-import scalafx.scene.SceneIncludes.jfxColor2sfx
-import scalafx.scene.transform.Rotate
-import scalafx.stage.{Popup, Stage}
+import scalafx.scene.Node
+import scalafx.scene.shape.Shape.sfxShape2jfx
 
 import scala.collection.mutable.ListBuffer
 
 
-class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, addTo: Pane, listOfFurniture: ListBuffer[Furniture], var xscale: Double, var yscale: Double ) extends VBox:
+class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, addTo: Pane, listOfFurniture: ListBuffer[Furniture] ) extends VBox:
 
 
   this.prefHeight = givenHeight
@@ -29,6 +24,8 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
   background = Background.fill(White)
   
   f.shape.fill = f.color
+  f.shape.scaleX = 0.75
+  f.shape.scaleY = 0.75
   val furnitureName = new Label(f.fname):
     font = Font(14)
 
@@ -39,15 +36,15 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
     onAction = (event) =>
       var newOne = f.copy()
       val shape = newOne.shape
-      shape.setScaleX( DesingGUI.floorPlanScaleX )
-      shape.setScaleY(DesingGUI.floorPlanScaleY)
+      shape.setScaleX( DesingGUI.floorPlanScale )
+      shape.setScaleY(DesingGUI.floorPlanScale)
       newOne.x = addTo.prefWidth.toDouble / 2
       newOne.y = addTo.prefHeight.toDouble / 2
       addTo.children += shape
       shape.setLayoutX( newOne.x )
       shape.setLayoutY( newOne.y )
       val draggableMaker = new DraggableMaker()
-      draggableMaker.makeDraggable( newOne, listOfFurniture )
+      draggableMaker.makeDraggable( newOne, listOfFurniture, addTo )
       newOne.shape.onMouseClicked  = (event) =>
         if event.getButton == MouseButton.SECONDARY then
           popUpMaker(newOne, addTo, listOfFurniture).show()

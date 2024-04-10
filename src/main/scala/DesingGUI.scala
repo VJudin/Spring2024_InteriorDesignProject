@@ -11,27 +11,19 @@ import scalafx.scene.layout.{Background, ColumnConstraints, GridPane, HBox, Pane
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.{Circle, Ellipse, Rectangle, Shape}
 import scalafx.scene.paint.Color.*
-import scalafx.stage.{FileChooser, Popup, Stage}
-import scalafx.stage.StageIncludes.jfxFileChooser2sfx
-
-import java.awt.Desktop
-import java.awt.event.{MouseEvent, MouseListener, MouseMotionListener}
+import scalafx.stage.{FileChooser, Stage}
 import java.io.FileInputStream
 import scala.collection.mutable.ListBuffer
-import scalafx.Includes.jfxImage2sfx
-import scalafx.beans.property.ReadOnlyDoubleProperty
 import scalafx.embed.swing.SwingFXUtils
 import scalafx.stage.FileChooser.{ExtensionFilter, sfxFileChooser2jfx}
 
 import javax.imageio.ImageIO
-import javax.swing.JFileChooser
 
 /** Luokan alku, johon voi jo lisätä oman pohjapiirrustuksen, ei käsittele virheellisiä syötteitä **/
 
 object DesingGUI extends JFXApp3:
 
-  var floorPlanScaleX = 0.0
-  var floorPlanScaleY = 0.0
+  var floorPlanScale = 0.0
 
   def start() =
 
@@ -83,8 +75,7 @@ object DesingGUI extends JFXApp3:
 
 
 
-    floorPlanScaleX = (stage.width.toDouble * 3/4) / 900
-    floorPlanScaleY = (stage.height.toDouble - 70) / 600
+    floorPlanScale = (stage.width.toDouble * 3/4) / 900
     var planningScaleX = (stage.width.toDouble * 3 / 4) / 400
     var planningScaleY = (stage.height.toDouble - 70) / 200
 
@@ -127,8 +118,7 @@ object DesingGUI extends JFXApp3:
 
       val submit = new Button( "Submit"):
         onAction = (event) =>
-          floorPlanScaleX = 750 / (widthField.getValue * 100)
-          floorPlanScaleY  = 530 / (heightField.getValue * 100 )
+          floorPlanScale = 750 / (widthField.getValue * 100)
           println(widthField.getValue)
           stage.close()
 
@@ -150,6 +140,8 @@ object DesingGUI extends JFXApp3:
           mainScene = new ImageView(image):
             fitHeight = stage.height.toDouble - 70
             fitWidth = stage.width.toDouble * 3/4
+          allFurniture.clear()
+          furniturePane.children.clear()
           stack.children.clear()
           stack.children = Array( mainScene, furniturePane)
           scaleInput().show()
@@ -160,18 +152,18 @@ object DesingGUI extends JFXApp3:
     val testFurniture2 = new Furniture( "Table", 40, 40, true, Circle(40), 200, 200, Blue, false)
     val testFurniture3 = new Furniture( "Lamp", 20, 20, false, Circle(20), 100, 100, Yellow, true)
     val testFurniture4 = new Furniture( "Coffee table", 100, 50, true, Ellipse(100, 100, 30, 20), 100, 100, Green, false)
-    val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture, floorPlanScaleX, floorPlanScaleY)
-    val tablePanel = new FurniturePanel( testFurniture2, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture, floorPlanScaleX, floorPlanScaleY)
-    val lampPanel = new FurniturePanel( testFurniture3, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture, floorPlanScaleX, floorPlanScaleY)
-    val sofaTablePanel = new FurniturePanel( testFurniture4, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture, floorPlanScaleX, floorPlanScaleY)
+    val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
+    val tablePanel = new FurniturePanel( testFurniture2, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
+    val lampPanel = new FurniturePanel( testFurniture3, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
+    val sofaTablePanel = new FurniturePanel( testFurniture4, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
 
     val testWall = new Wall(10, 200, 300, 300, Black)
     val testDoor = new Door(100, 100, 300, 300, Black)
     val testWindow = new Window(100, 300, 300)
     val allWalls = ListBuffer[Furniture]()
-    val wallPanel = new FurniturePanel(testWall, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allWalls, planningScaleX, planningScaleY)
-    val doorPanel = new FurniturePanel(testDoor,(stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allWalls, planningScaleX, planningScaleY)
-    val windowPanel = new FurniturePanel( testWindow, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allWalls, planningScaleX, planningScaleY)
+    val wallPanel = new FurniturePanel(testWall, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allWalls)
+    val doorPanel = new FurniturePanel(testDoor,(stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allWalls)
+    val windowPanel = new FurniturePanel( testWindow, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allWalls)
 
     val save1 = saveButtonMaker(stage, mainScene, stack)
     val save2 = saveButtonMaker(stage, mainScene, stack2)
@@ -195,7 +187,12 @@ object DesingGUI extends JFXApp3:
         bottomBar2.children = Array(returnButton, save2)
         root2.children = Array(secondView, bottomBar2)
 
-    bottomBar.children = Array(addButton, save1, designYourOwnButton)
+    val restartButton = new Button( "Restart" ):
+      onAction = (event) =>
+        furniturePane.children.clear()
+        allFurniture.clear()
+
+    bottomBar.children = Array(addButton, save1, designYourOwnButton, restartButton)
     sidePanel.children = Array(lampPanel, tablePanel, sofaPanel, sofaTablePanel )
     sidePanel2.children = Array( wallPanel, doorPanel, windowPanel )
     root.children = Array(mainView, bottomBar)
