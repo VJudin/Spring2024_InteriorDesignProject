@@ -1,3 +1,4 @@
+import DesingGUI.floorPlanScaleX
 import javafx.geometry
 import javafx.scene.canvas
 import javafx.scene.input.MouseButton
@@ -17,7 +18,7 @@ import scalafx.stage.{Popup, Stage}
 import scala.collection.mutable.ListBuffer
 
 
-class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, addTo: Pane, listOfFurniture: ListBuffer[Furniture], xscale: Double, yscale: Double ) extends VBox:
+class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, addTo: Pane, listOfFurniture: ListBuffer[Furniture], var xscale: Double, var yscale: Double ) extends VBox:
 
 
   this.prefHeight = givenHeight
@@ -38,8 +39,8 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
     onAction = (event) =>
       var newOne = f.copy()
       val shape = newOne.shape
-      shape.scaleX = xscale
-      shape.scaleY = yscale
+      shape.setScaleX( DesingGUI.floorPlanScaleX )
+      shape.setScaleY(DesingGUI.floorPlanScaleY)
       newOne.x = addTo.prefWidth.toDouble / 2
       newOne.y = addTo.prefHeight.toDouble / 2
       addTo.children += shape
@@ -126,20 +127,20 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
 
   val pane = new VBox():
     margin = Insets(10)
-    spacing = 5
+    spacing = 10
     padding = Insets(10, 10, 10, 10)
 
   val changables = new HBox():
-    spacing = 20
+    spacing = 150
 
   val changePanel = new VBox():
     prefHeight = stage.height.toDouble
     prefWidth = 400
     spacing = 20
-    padding = Insets(20, 20, 20, 20)
 
   val submitOrDelete = new HBox():
     spacing = 20
+    padding = Insets(20, 20, 20, 20)
 
 
   val label1 = new Label("Modify this piece of furniture")
@@ -150,15 +151,15 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
   shape.getTransforms.addAll( n.shape.getTransforms )
 
 
-    val shapePanel = new VBox():
+  val shapePanel = new VBox():
       if n.width < n.lenght then
         minHeight = n.lenght
         minWidth = n.lenght
-        padding = Insets( n.lenght / 2, n.width/2, 20, 20 )
+        padding = Insets( n.lenght / 2, n.lenght/4 , n.lenght / 4, 20 )
       else
         minHeight = n.width
         minWidth = n.width
-        padding = Insets( n.width / 2, n.width / 2, 20, 20 )
+        padding = Insets( n.width / 2, n.width / 4, n.width / 4, 20 )
 
   colorPicker.onAction = (event) => shape.fill = colorPicker.getValue
 
