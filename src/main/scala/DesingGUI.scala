@@ -107,22 +107,7 @@ object DesingGUI extends JFXApp3:
 
     val secondView = new HBox():
       children = Array(stack2, scroll2)
-/**    Saving code of popUp for possible later use
- *
- * val popUp = new VBox():
-      val label = Label("Add the path to your floorplan")
-      val text1 = TextField()
-      val button = new Button("Submit"):
-        onAction = (event) =>
-          mainScene = new ImageView(Image(FileInputStream(text1.text.value))):
-                  fitHeight = stage.height.toDouble - 70
-                  fitWidth = stage.width.toDouble * 3/4
-          stage.scene = scene1
-          mainView.children.clear()
-          mainView.children = Array( mainScene, sidePanel)
-          text1.clear()
-      text1.promptText = "Add the path to your floorplan here"
-      children = Array( label, text1, button ) */
+
     val allFurniture = ListBuffer[Furniture]()
     def scaleInput(): Stage =
 
@@ -234,7 +219,6 @@ end DesingGUI
             newWall.shape.setLayoutY(y)
             allFurniture += newWall
 
-
 def saveButtonMaker(s: Stage, mainView: ImageView, stack: StackPane): Button = new Button( "Save"):
   onAction = (event) =>
     val fileChooser = new FileChooser():
@@ -247,33 +231,5 @@ def saveButtonMaker(s: Stage, mainView: ImageView, stack: StackPane): Button = n
       var rendered = SwingFXUtils.fromFXImage(writable, null)
       ImageIO.write(rendered, "png", fileToSave)
 
-/**def scaleInput(): Stage =
 
-      val stage = new Stage()
-      stage.setWidth(300)
-      stage.setHeight(300)
-      stage.setX(300)
-      stage.setY(300)
-
-      val pane = new VBox()
-
-      val label1 = new Label("The width of your floorplan")
-      val label2 = new Label("The height of your floorplan")
-
-      val widthField = new Spinner[Int](0.1, 10, 2, 0.1)
-      val heightField = new Spinner[Int](0.1, 10, 2, 0.1)
-
-      val submit = new Button( "Submit"):
-        onAction = (event) =>
-          val newScaleX: Int = widthField.getValue
-          val newScaleY: Int = heightField.getValue
-          stage.close()
-
-      pane.children = Array( label1, widthField, label2, heightField, submit)
-
-      val scene = new Scene(pane)
-
-      stage.setScene(scene)
-
-      stage */
 

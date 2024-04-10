@@ -18,3 +18,5 @@ Tällä ajanjaksolla tavoitteeni on lisätä ohjelmaan toiminnallisuutta. Aloiti
 aikaa, mutta sain huonekalujen liikuttamisen toimimaan. Sen jälkeen päätin, että niiden väriä pitäisi pystyä muuttamaan. Värin vaihtamiseen
 ColorPicker osoittautui todella käteväksi. Sen jälkeen ajattelin, että olisi hyvä implementoida se, että huonekalut eivät saa olla toistensa
 päällä. 
+
+6.3 - 16.3
