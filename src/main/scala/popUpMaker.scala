@@ -1,13 +1,19 @@
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
-import scalafx.scene.control.{Button, ColorPicker, Label}
+import scalafx.scene.control.{Button, ColorPicker, Label, Spinner, TextField}
 import scalafx.scene.layout.{GridPane, HBox, Pane, VBox}
-import scalafx.scene.shape.Rectangle
+import scalafx.scene.shape.{Arc, ArcType, Circle, Ellipse, Rectangle}
 import scalafx.scene.transform.Rotate
 import scalafx.stage.Stage
 import scalafx.scene.SceneIncludes.jfxColor2sfx
+import scalafx.scene.control.TableView.ResizeFeatures
+import scalafx.scene.paint.Color
+import scalafx.stage.StageStyle.Transparent
 
 import scala.collection.mutable.ListBuffer
+
+var w = 0.0
+var h = 0.0
 
 /** Metodi, joka tuottaa popUp ikkunan huonekalun värin vaihtamiseksi */
 def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Furniture] ): Stage =
@@ -32,7 +38,7 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
     prefHeight = stage.height.toDouble
 
 
-  val pane = new VBox():
+  /**val pane = new VBox():
     margin = Insets(10)
     spacing = 10
     padding = Insets(10, 10, 10, bigger )
@@ -43,7 +49,7 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
   val changePanel = new VBox():
     prefHeight = stage.height.toDouble
     prefWidth = 400
-    spacing = 20
+    spacing = 20 */
 
   val submitOrDelete = new HBox():
     spacing = 20
@@ -70,12 +76,25 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
 
   colorPicker.onAction = (event) => shape.fill = colorPicker.getValue
 
+  val scaleWidth = new TextField():
+    promptText = "width"
+  val scaleWidth2 = new Spinner[Double](10.0, 500, 100, 10.0)
+  val scaleHeight = new TextField():
+    promptText = "height"
+  val scaleHeight2 = new Spinner[Double](10.0, 500, 100, 10.0)
+  val label2 = new Label("cm")
+  val label3 = new Label("cm")
+
   val submitButton = new Button( "Submit changes"):
     onAction = (event) =>
       n.changeColor( colorPicker.getValue )
       n.shape.getTransforms.clear()
       n.shape.getTransforms.addAll( copyOfFurniture.shape.getTransforms )
+      w = scaleWidth2.getValue
+      h = scaleHeight2.getValue
+      n.changeSize(w, h)
       stage.close()
+
 
   val deleteButton = new Button( "Delete this furniture"):
     onAction = (event) =>
@@ -103,9 +122,25 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
   grid.add(submitOrDelete, 0, 5,3, 1)
   grid.add(colorPicker, 1, 1, 3, 1)
   grid.add(rotateButton, 1, 2, 3, 1)
+  grid.add(scaleWidth2, 1, 3, 3, 1)
+  grid.add(label2, 4, 3)
+  grid.add( scaleHeight2, 1, 4, 3, 1)
+  grid.add(label3, 4,4)
+
 
   val scene = new Scene(grid)
 
   stage.setScene(scene)
 
   stage
+
+def inputValidator( field: TextField, n: Furniture ) =
+  val input = field.text().toDoubleOption
+  input match
+    case Some(number) =>
+      if number <= 0 then
+        println("hei")
+      else
+        w = number
+    case _ =>
+        println("moi")

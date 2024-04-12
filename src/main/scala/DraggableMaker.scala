@@ -29,16 +29,16 @@ class DraggableMaker:
     collisionDetected
 
   def isOutOfBounds(coordX: Double, coordY: Double, s: Furniture, a: Pane): Boolean =
-    val maxX = a.getWidth
-    val maxY = a.getHeight
+    val maxX = a.getPrefWidth
+    val maxY = a.getPrefHeight
     val minX = -20
-    val minY = -10
+    val minY = -20
     val width = s.width * floorPlanScale
     val height = s.lenght * floorPlanScale
-    if coordX < minX || coordY < minY || coordX + width> maxX || coordY + height > maxY then
-      true
-    else
+    if coordX >= minX && coordY >= minY && coordX + width <= maxX && coordY + height <= maxY then
       false
+    else
+      true
 
   def makeDraggable( a: Furniture, b: ListBuffer[Furniture], c: Pane ) =
     var n = a.shape

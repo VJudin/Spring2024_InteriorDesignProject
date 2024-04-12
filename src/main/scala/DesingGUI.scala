@@ -61,6 +61,8 @@ object DesingGUI extends JFXApp3:
     val furniturePane = new Pane():
       prefHeight = stage.height.toDouble - 70
       prefWidth  = stage.width.toDouble * 3/4
+    furniturePane.setLayoutX(0)
+    furniturePane.setLayoutY(0)
 
     val floorplanDesignPane = new Pane():
       prefHeight = stage.height.toDouble - 70
@@ -75,7 +77,7 @@ object DesingGUI extends JFXApp3:
 
 
 
-    floorPlanScale = (stage.width.toDouble * 3/4) / 900
+    floorPlanScale = (stage.width.toDouble * 3/4) / 900.0
     var planningScaleX = (stage.width.toDouble * 3 / 4) / 400
     var planningScaleY = (stage.height.toDouble - 70) / 200
 
@@ -85,6 +87,8 @@ object DesingGUI extends JFXApp3:
     var mainScene = new ImageView(Image(FileInputStream("/Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/test/piirrustus.jpeg"))):
       fitHeight = stage.height.toDouble - 70
       fitWidth = stage.width.toDouble * 3/4
+    mainScene.setLayoutX(0)
+    mainScene.setLayoutY(0)
 
     var stack = new StackPane():
       children = Array( mainScene, furniturePane)
@@ -119,7 +123,6 @@ object DesingGUI extends JFXApp3:
       val submit = new Button( "Submit"):
         onAction = (event) =>
           floorPlanScale = 750 / (widthField.getValue * 100)
-          println(widthField.getValue)
           stage.close()
 
       pane.children = Array( label1, widthField, label2, heightField, submit)
@@ -219,7 +222,8 @@ end DesingGUI
 def saveButtonMaker(s: Stage, mainView: ImageView, stack: StackPane): Button = new Button( "Save"):
   onAction = (event) =>
     val fileChooser = new FileChooser():
-      extensionFilters.add( ExtensionFilter("jpg and png", Seq("*.jpg", "*.png")) )
+      extensionFilters.add( ExtensionFilter("PNG", "*.png") )
+      extensionFilters.add( ExtensionFilter("JPEG", "*.jpg"))
     fileChooser.setTitle("Save file")
     val fileToSave = fileChooser.showSaveDialog(s)
     if fileToSave != null then

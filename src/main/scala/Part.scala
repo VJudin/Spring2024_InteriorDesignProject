@@ -1,20 +1,34 @@
-import javafx.scene.shape.ArcType
+
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Shape.sfxShape2jfx
-import scalafx.scene.shape.{Arc, Circle, Ellipse, Rectangle, Shape}
+import scalafx.scene.shape.{Arc, ArcType, Circle, Ellipse, Rectangle, Shape}
 import scalafx.scene.text.FontWeight.Black
 import scalafx.stage.StageStyle.Transparent
 
 /** Alustava luokkarakenne, täytyy tehdä valmiiksi myöhemmin **/
 
-class Part ( name: String, var width: Int, var lenght: Int, canHaveOnTop: Boolean, val shape: Shape, var x: Double, var y: Double):
+class Part ( name: String, var width: Double, var lenght: Double, canHaveOnTop: Boolean, val shape: Shape, var x: Double, var y: Double):
 
-  def changeSize( w: Int, l: Int) =
+  def changeSize( w: Double, l: Double) =
     width = w
     lenght = l
-    this.shape.resize( w, l )
+    this.shape match
+      case shape: Rectangle =>
+        shape.width = w
+        shape.height = h
+      case shape: Circle =>
+        shape.radius = w
+      case shape: Ellipse =>
+        shape.radiusX = w
+        shape.radiusY = h
+      case shape: Arc =>
+        shape.setType(ArcType.ROUND)
+        shape.radiusX = w
+        shape.radiusY = h
+        shape.startAngle = 0.0
+        shape.length = 90.0
 
-class Furniture( val fname: String,  width: Int,  lenght: Int, val canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double, var color: Color, val canBePlacedOnTop: Boolean) extends Part (fname, width: Int, lenght: Int, canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double):
+class Furniture( val fname: String,  width: Double,  lenght: Double, val canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double, var color: Color, val canBePlacedOnTop: Boolean) extends Part (fname, width: Double, lenght: Double, canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double):
 
   this.shape.fill = this.color
   
@@ -30,10 +44,10 @@ class Furniture( val fname: String,  width: Int,  lenght: Int, val canHaveOnTop:
     var shapeOf: Shape =
       this.shape match
         case shape: Rectangle => new Rectangle:
-          this.width = f.width.toDouble
-          this.height = f.lenght.toDouble
+          this.width = f.width
+          this.height = f.lenght
         case shape: Circle => new Circle:
-          radius = f.width.toDouble
+          radius = f.width
         case  shape: Ellipse => new Ellipse:
           this.radiusX = f.width
           this.radiusY = f.lenght
@@ -53,6 +67,9 @@ class Wall(width: Int, length: Int, x: Int, y: Int, color: Color) extends Furnit
 
 class Door( width: Int, lenght: Int, x: Int, y: Int, color: Color) extends Furniture( "Door", width, lenght, false, Arc(0, 0, width, lenght , 0.0, 90.0), x, y, color, false):
   this.shape.fill = Color.Black
+
+  this.shape match
+    case shape: Arc => shape.setType(ArcType.ROUND)
 
 
 class Window( lenght: Int, x: Int, y: Int) extends Furniture( "Window", 2, lenght, false, Rectangle(2, lenght), x, y, Color.Black, false):

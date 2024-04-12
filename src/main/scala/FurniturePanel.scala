@@ -36,8 +36,6 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
     onAction = (event) =>
       var newOne = f.copy()
       val shape = newOne.shape
-      shape.setScaleX( DesingGUI.floorPlanScale )
-      shape.setScaleY(DesingGUI.floorPlanScale)
       newOne.x = addTo.prefWidth.toDouble / 2
       newOne.y = addTo.prefHeight.toDouble / 2
       addTo.children += shape
@@ -48,6 +46,8 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
       newOne.shape.onMouseClicked  = (event) =>
         if event.getButton == MouseButton.SECONDARY then
           popUpMaker(newOne, addTo, listOfFurniture).show()
+      shape.setScaleX( DesingGUI.floorPlanScale )
+      shape.setScaleY(DesingGUI.floorPlanScale)
       listOfFurniture += newOne
 
   this.children = Array( furnitureName, f.shape, addButton )
