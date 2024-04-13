@@ -12,10 +12,13 @@ import scalafx.scene.paint.Color
 import scalafx.scene.shape.{Circle, Ellipse, Rectangle, Shape}
 import scalafx.scene.paint.Color.*
 import scalafx.stage.{FileChooser, Stage}
+
 import java.io.FileInputStream
 import scala.collection.mutable.ListBuffer
 import scalafx.embed.swing.SwingFXUtils
+import scalafx.scene.image.Image.sfxImage2jfx
 import scalafx.stage.FileChooser.{ExtensionFilter, sfxFileChooser2jfx}
+import scalafx.Includes.jfxImage2sfx
 
 import javax.imageio.ImageIO
 
@@ -122,7 +125,7 @@ object DesingGUI extends JFXApp3:
 
       val submit = new Button( "Submit"):
         onAction = (event) =>
-          floorPlanScale = 750 / (widthField.getValue * 100)
+          floorPlanScale = (1000 * 3/4) / (widthField.getValue * 100)
           stage.close()
 
       pane.children = Array( label1, widthField, label2, heightField, submit)
@@ -148,7 +151,6 @@ object DesingGUI extends JFXApp3:
           stack.children.clear()
           stack.children = Array( mainScene, furniturePane)
           scaleInput().show()
-          //popUpMaker(testFurniture, furniturePane, allFurniture).show()
 
 
     val testFurniture = new Furniture("Sofa", 200, 100, true, Rectangle(200, 100), 300, 300, Pink, false)
@@ -171,6 +173,25 @@ object DesingGUI extends JFXApp3:
     val save1 = saveButtonMaker(stage, mainScene, stack)
     val save2 = saveButtonMaker(stage, mainScene, stack2)
 
+    val restartButton2 = new Button( "Restart" ):
+      onAction = (event) =>
+        floorplanDesignPane.children.clear()
+        allWalls.clear()
+
+    val useThisFloorPlanButton = new Button( "Use this floorplan" ):
+      onAction = (event) =>
+        allFurniture.addAll( allWalls )
+        val writable = new WritableImage(mainScene.getFitWidth.toInt, mainScene.getFitHeight.toInt)
+        stack2.snapshot(null, writable)
+        val image = sfxImage2jfx(writable)
+        mainScene = new ImageView(image):
+            fitHeight = stage.height.toDouble - 70
+            fitWidth = stage.width.toDouble * 3/4
+        stack.children.clear()
+        stack.children = Array(mainScene, furniturePane)
+        scene1.root = root
+
+
     val bottomBar = new HBox():
       padding = Insets.apply(10, 10, 10, 10)
       spacing = 10
@@ -187,13 +208,14 @@ object DesingGUI extends JFXApp3:
         val returnButton = new Button( "Go back"):
           onAction = (event) =>
             scene1.root = root
-        bottomBar2.children = Array(returnButton, save2)
+        bottomBar2.children = Array(returnButton, save2, restartButton2, useThisFloorPlanButton)
         root2.children = Array(secondView, bottomBar2)
 
     val restartButton = new Button( "Restart" ):
       onAction = (event) =>
         furniturePane.children.clear()
         allFurniture.clear()
+
 
     bottomBar.children = Array(addButton, save1, designYourOwnButton, restartButton)
     sidePanel.children = Array(lampPanel, tablePanel, sofaPanel, sofaTablePanel )

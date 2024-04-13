@@ -23,7 +23,6 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
 
   background = Background.fill(White)
   
-  f.shape.fill = f.color
   f.shape.scaleX = 0.75
   f.shape.scaleY = 0.75
   val furnitureName = new Label(f.fname):
@@ -39,6 +38,8 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
       newOne.x = addTo.prefWidth.toDouble / 2
       newOne.y = addTo.prefHeight.toDouble / 2
       addTo.children += shape
+      shape.setScaleX( DesingGUI.floorPlanScale )
+      shape.setScaleY(DesingGUI.floorPlanScale)
       shape.setLayoutX( newOne.x )
       shape.setLayoutY( newOne.y )
       val draggableMaker = new DraggableMaker()
@@ -46,8 +47,6 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
       newOne.shape.onMouseClicked  = (event) =>
         if event.getButton == MouseButton.SECONDARY then
           popUpMaker(newOne, addTo, listOfFurniture).show()
-      shape.setScaleX( DesingGUI.floorPlanScale )
-      shape.setScaleY(DesingGUI.floorPlanScale)
       listOfFurniture += newOne
 
   this.children = Array( furnitureName, f.shape, addButton )

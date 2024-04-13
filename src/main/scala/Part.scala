@@ -66,7 +66,10 @@ class Wall(width: Int, length: Int, x: Int, y: Int, color: Color) extends Furnit
   this.shape.fill = this.color
 
 class Door( width: Int, lenght: Int, x: Int, y: Int, color: Color) extends Furniture( "Door", width, lenght, false, Arc(0, 0, width, lenght , 0.0, 90.0), x, y, color, false):
-  this.shape.fill = Color.Black
+  
+  this.shape.strokeWidth = 3
+  this.shape.stroke = this.color
+  this.shape.fill = Color.White
 
   this.shape match
     case shape: Arc => shape.setType(ArcType.ROUND)
