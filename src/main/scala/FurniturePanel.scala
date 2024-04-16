@@ -2,8 +2,8 @@ import DesingGUI.floorPlanScale
 import javafx.scene.input.MouseButton
 import scalafx.geometry.Insets
 import scalafx.scene.control.{Button, Label}
-import scalafx.scene.layout.{Background, Pane, VBox}
-import scalafx.scene.paint.Color.White
+import scalafx.scene.layout.{Background, Border, BorderImage, BorderStroke, BorderStrokeStyle, BorderWidths, CornerRadii, Pane, VBox}
+import scalafx.scene.paint.Color.{Pink, White}
 import scalafx.scene.shape.Shape
 import scalafx.scene.text.Font
 import scalafx.geometry
@@ -22,6 +22,7 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
   val panel = this
 
   background = Background.fill(White)
+  val stroke = BorderStroke(Pink, BorderStrokeStyle.Solid, CornerRadii(1), BorderWidths(3))
   
   f.shape.scaleX = 0.75
   f.shape.scaleY = 0.75
@@ -49,4 +50,5 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
           popUpMaker(newOne, addTo, listOfFurniture).show()
       listOfFurniture += newOne
 
+  border = Border( Array(stroke), Array[BorderImage]())
   this.children = Array( furnitureName, f.shape, addButton )

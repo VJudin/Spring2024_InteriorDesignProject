@@ -7,7 +7,7 @@ import scalafx.scene.canvas.Canvas
 import scalafx.scene.control.{Button, Label, ScrollPane, Spinner, TextField}
 import scalafx.scene.image.{Image, ImageView, WritableImage}
 import scalafx.scene.input.{MouseButton, MouseDragEvent}
-import scalafx.scene.layout.{Background, ColumnConstraints, GridPane, HBox, Pane, RowConstraints, StackPane, VBox}
+import scalafx.scene.layout.{Background, Border, BorderImage, BorderStroke, BorderStrokeStyle, BorderWidths, ColumnConstraints, CornerRadii, GridPane, HBox, Pane, RowConstraints, StackPane, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.{Circle, Ellipse, Rectangle, Shape}
 import scalafx.scene.paint.Color.*
@@ -19,6 +19,7 @@ import scalafx.embed.swing.SwingFXUtils
 import scalafx.scene.image.Image.sfxImage2jfx
 import scalafx.stage.FileChooser.{ExtensionFilter, sfxFileChooser2jfx}
 import scalafx.Includes.jfxImage2sfx
+import scalafx.Includes.jfxColor2sfx
 
 import javax.imageio.ImageIO
 
@@ -53,6 +54,7 @@ object DesingGUI extends JFXApp3:
     scroll.prefViewportWidth = stage.width.toDouble / 4
     scroll.setContent( sidePanel )
     scroll.hbarPolicy = ScrollPane.ScrollBarPolicy.Never
+    scroll.hmax = 0
 
     val scroll2 = new ScrollPane()
     scroll2.background = Background.fill(White)
@@ -60,6 +62,7 @@ object DesingGUI extends JFXApp3:
     scroll2.prefViewportWidth = stage.width.toDouble / 4
     scroll2.setContent( sidePanel2 )
     scroll2.hbarPolicy = ScrollPane.ScrollBarPolicy.Never
+    scroll2.hmax = 0
 
     val furniturePane = new Pane():
       prefHeight = stage.height.toDouble - 70
@@ -153,7 +156,7 @@ object DesingGUI extends JFXApp3:
           scaleInput().show()
 
 
-    val testFurniture = new Furniture("Sofa", 200, 100, true, Rectangle(200, 100), 300, 300, Pink, false)
+    val testFurniture = new Furniture("Sofa", 200, 100, true, Rectangle(200, 100), 300, 300, OrangeRed, false)
     val testFurniture2 = new Furniture( "Table", 40, 40, true, Circle(40), 200, 200, Blue, false)
     val testFurniture3 = new Furniture( "Lamp", 20, 20, false, Circle(20), 100, 100, Yellow, true)
     val testFurniture4 = new Furniture( "Coffee table", 100, 50, true, Ellipse(100, 100, 30, 20), 100, 100, Green, false)
@@ -162,8 +165,8 @@ object DesingGUI extends JFXApp3:
     val lampPanel = new FurniturePanel( testFurniture3, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
     val sofaTablePanel = new FurniturePanel( testFurniture4, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
 
-    val testWall = new Wall(10, 200, 300, 300, Black)
-    val testDoor = new Door(100, 100, 300, 300, Black)
+    val testWall = new Wall(200, 10, 300, 300, Black)
+    val testDoor = new Door(100, 100, 300, 300)
     val testWindow = new Window(100, 300, 300)
     val allWalls = ListBuffer[Furniture]()
     val wallPanel = new FurniturePanel(testWall, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allWalls)
@@ -193,14 +196,18 @@ object DesingGUI extends JFXApp3:
 
 
     val bottomBar = new HBox():
+      val stroke = BorderStroke(Pink, BorderStrokeStyle.Solid, CornerRadii(1), BorderWidths(3))
       padding = Insets.apply(10, 10, 10, 10)
       spacing = 10
       background = Background.fill(White)
+      border = Border( Array(stroke), Array[BorderImage]())
 
     val bottomBar2 = new HBox():
-      padding = Insets.apply(10, 10, 10, 10)
+      val stroke = BorderStroke(Pink, BorderStrokeStyle.Solid, CornerRadii(1), BorderWidths(3))
+      padding = Insets.apply(5, 5, 5, 5)
       spacing = 10
       background = Background.fill(White)
+      border = Border( Array(stroke), Array[BorderImage]())
 
     val designYourOwnButton = new Button( "Design your own floorplan"):
       onAction = (event) =>
@@ -228,18 +235,6 @@ object DesingGUI extends JFXApp3:
 end DesingGUI
 
 /** EI TOIMI AINAKAAN VIELÄ */
-    def wallAdder( where: Pane, from: Image, allFurniture: ListBuffer[Furniture] ) =
-      val reader = from.getPixelReader
-      val untilX = where.width.toInt
-      val untilY = where.height.toInt
-      for x <- 0 to(untilX, 1) do
-        for y <- 0 to(untilY, 1) do
-          if reader.getColor( x, y ) == Black then
-            var newWall = Wall(1, 1, x, y, Black)
-            where.children += newWall.shape
-            newWall.shape.setLayoutX(x)
-            newWall.shape.setLayoutY(y)
-            allFurniture += newWall
 
 def saveButtonMaker(s: Stage, mainView: ImageView, stack: StackPane): Button = new Button( "Save"):
   onAction = (event) =>

@@ -1,6 +1,9 @@
 import DesingGUI.floorPlanScale
+import scalafx.scene.image.Image
 import scalafx.scene.layout.Pane
-import scalafx.scene.shape.Shape
+import scalafx.scene.paint.Color
+import scalafx.scene.paint.Color.Black
+import scalafx.scene.shape.{Arc, ArcType, Circle, Ellipse, Rectangle, Shape}
 
 import scala.collection.mutable.ListBuffer
 
@@ -28,17 +31,55 @@ class DraggableMaker:
              collisionDetected = true
     collisionDetected
 
+
+
   def isOutOfBounds(coordX: Double, coordY: Double, s: Furniture, a: Pane): Boolean =
-    val maxX = a.getPrefWidth
-    val maxY = a.getPrefHeight
-    val minX = -20
-    val minY = -20
+    val parentBounds = a.getLayoutBounds
+    val paneWidth = parentBounds.getMaxX
+    val paneHeight = parentBounds.getMaxY
+    var maxX = 0.0
+    var maxY = 0.0
+    var minX = 0.0
+    var minY = 0.0
     val width = s.width * floorPlanScale
     val height = s.lenght * floorPlanScale
-    if coordX >= minX && coordY >= minY && coordX + width <= maxX && coordY + height <= maxY then
+    s.shape match
+      case shape: Rectangle =>
+        maxX = paneWidth - width
+        maxY = paneHeight - height
+        minX = parentBounds.getMinX
+        minY = parentBounds.getMinY
+      case shape: Circle =>
+        minX = width
+        maxX = paneWidth - width
+        minY = width
+        maxY = paneHeight - width
+      case  shape: Ellipse =>
+        minX = width
+        maxX = paneWidth - width
+        minY = height
+        maxY = paneHeight - height
+      case shape: Arc =>
+        maxX = paneWidth
+        maxY = paneHeight
+    if coordX <= maxX && coordX >= minX && coordY <= maxY && coordY >= minY then
       false
     else
       true
+      
+  def wallChecker( s: Furniture, where: Pane, from: Image, allFurniture: ListBuffer[Furniture] ) =
+    val reader = from.getPixelReader
+    val untilX = s.width.toInt
+    val untilY = s.lenght.toInt
+    var isOnWall = ListBuffer[Boolean]()
+    for x <- s.x.toInt until untilX do
+      for y <- s.y.toInt until untilY do
+        if !reader.getColor(x, y).eq(Color.White) then
+          isOnWall += true
+    if isOnWall.nonEmpty then 
+      true
+    else 
+      false
 
   def makeDraggable( a: Furniture, b: ListBuffer[Furniture], c: Pane ) =
     var n = a.shape

@@ -20,3 +20,6 @@ ColorPicker osoittautui todella käteväksi. Sen jälkeen ajattelin, että olisi
 päällä. 
 
 6.3 - 16.3
+Skaalaus on laadittu. Nyt huonetta voi skaalata käyttäjän mieltymyksen mukaan. Huonekalujen kokoa voi myös muuttaa. Sen lisäksi olen yrittänyt
+laatia metodia, joka tarkistaa, että huonekalu ei ole käyttöikkunan ulkopuolella. Olen myös yrittänyt laatia toista metodia, joka tarkistaisi
+pikselien värien avulla onko huonekalu jonkin seinän päällä (eli siis luettaisiin kuvasta seinät ja ovet).

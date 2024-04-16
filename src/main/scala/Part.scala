@@ -38,6 +38,7 @@ class Furniture( val fname: String,  width: Double,  lenght: Double, val canHave
     this.shape.fill = c
     
   val f = this
+
     
   /** Mahdollistaa tietyn huonekaluolion kopioimisen, jotta kopioita huonekaluista voi lisätä pohjapiirrustukseen*/
   def copy(): Furniture =
@@ -65,16 +66,16 @@ class Furniture( val fname: String,  width: Double,  lenght: Double, val canHave
 class Wall(width: Int, length: Int, x: Int, y: Int, color: Color) extends Furniture("Wall", width, length, false,  Rectangle(width, length), x, y, color, false ):
   this.shape.fill = this.color
 
-class Door( width: Int, lenght: Int, x: Int, y: Int, color: Color) extends Furniture( "Door", width, lenght, false, Arc(0, 0, width, lenght , 0.0, 90.0), x, y, color, false):
-  
+class Door( width: Int, lenght: Int, x: Int, y: Int) extends Furniture( "Door", width, lenght, false, Arc(0, 0, width, lenght , 0.0, 90.0), x, y, Color.Black, false):
+
   this.shape.strokeWidth = 3
-  this.shape.stroke = this.color
+  this.shape.stroke = Color.Black
   this.shape.fill = Color.White
 
   this.shape match
     case shape: Arc => shape.setType(ArcType.ROUND)
 
 
-class Window( lenght: Int, x: Int, y: Int) extends Furniture( "Window", 2, lenght, false, Rectangle(2, lenght), x, y, Color.Black, false):
+class Window( width: Int, x: Int, y: Int) extends Furniture( "Window", width, 2, false, Rectangle(width, 2), x, y, Color.Black, false):
   this.shape.fill = this.color
 
