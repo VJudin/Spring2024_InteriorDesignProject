@@ -132,9 +132,9 @@ object DesingGUI extends JFXApp3:
           scaleInput().show()
 
 
-    val testFurniture = new Furniture("Sofa", 200, 100, true, Rectangle(200, 100), 300, 300, OrangeRed, false)
-    val testFurniture2 = new Furniture( "Table", 40, 40, true, Circle(40), 200, 200, Blue, false)
-    val testFurniture4 = new Furniture( "Coffee table", 100, 50, true, Ellipse(100, 100, 30, 20), 100, 100, Green, false)
+    val testFurniture = new Furniture("Sofa", 200, 100, true, Rectangle(200, 100), 300, 300, OrangeRed, false, Image( FileInputStream("src/main/Pictures/sohva.jpeg")))
+    val testFurniture2 = new Furniture( "Table", 40, 40, true, Circle(40), 200, 200, Blue, false, Image( FileInputStream("src/main/Pictures/table.jpeg")))
+    val testFurniture4 = new Furniture( "Coffee table", 100, 50, true, Ellipse(100, 100, 30, 20), 100, 100, Green, false, Image( FileInputStream("src/main/Pictures/coffeeTable.jpeg")))
     val testFurniture5 = new Rug( 100, 100, 100, 100, GreenYellow)
     val testLamp = new Lamp( 20, 100, 100, Yellow)
     val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), (spaceForBottom / 3), furniturePane, allFurniture)

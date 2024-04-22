@@ -1,8 +1,11 @@
 import javafx.scene
+import scalafx.scene.image.Image
 import scalafx.scene.paint.Color
 import scalafx.scene.paint.Color.{Pink, White}
 import scalafx.scene.shape.Shape.sfxShape2jfx
 import scalafx.scene.shape.{Arc, ArcType, Circle, Ellipse, Rectangle, Shape}
+
+import java.io.FileInputStream
 
 /** Yläluokka */
 class Part ( name: String, var width: Double, var lenght: Double, canHaveOnTop: Boolean, val shape: Shape, var x: Double, var y: Double):
@@ -28,7 +31,7 @@ class Part ( name: String, var width: Double, var lenght: Double, canHaveOnTop: 
         shape.length = 90.0
       case _ => shape.fill = Pink
 
-class Furniture( val fname: String,  width: Double,  lenght: Double, val canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double, var color: Color, val canBePlacedOnTop: Boolean) extends Part (fname, width: Double, lenght: Double, canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double):
+class Furniture( val fname: String,  width: Double,  lenght: Double, val canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double, var color: Color, val canBePlacedOnTop: Boolean, val image: Image) extends Part (fname, width: Double, lenght: Double, canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double):
 
   this.shape.fill = this.color
   
@@ -73,16 +76,16 @@ class Furniture( val fname: String,  width: Double,  lenght: Double, val canHave
           this.radiusY = f.lenght
           this.startAngle = 0.0
           this.length = 90.0
-    new Furniture( fname, width, lenght, canHaveOnTop, shapeOf, 0.0, 0.0, color, canBePlacedOnTop)
+    new Furniture( fname, width, lenght, canHaveOnTop, shapeOf, 0.0, 0.0, color, canBePlacedOnTop, image)
 
 
   def compare( second: Furniture ): Boolean = f.fname == second.fname && f.lenght == second.lenght && f.width == second.width && f.shape == second.shape && f.color == second.color && f.x == second.x && f.y == second.y
 
-class Wall(width: Int, length: Int, x: Int, y: Int, color: Color) extends Furniture("Wall", width, length, false,  Rectangle(width, length), x, y, color, false ):
+class Wall(width: Int, length: Int, x: Int, y: Int, color: Color) extends Furniture("Wall", width, length, false,  Rectangle(width, length), x, y, color, false, Image( FileInputStream("src/main/Pictures/wall.jpeg")) ):
   
   this.shape.fill = this.color
 
-class Door( width: Int, lenght: Int, x: Int, y: Int, color: Color) extends Furniture( "Door", width, lenght, false, Arc(0, 0, width, lenght , 0.0, 90.0), x, y, color, false):
+class Door( width: Int, lenght: Int, x: Int, y: Int, color: Color) extends Furniture( "Door", width, lenght, false, Arc(0, 0, width, lenght , 0.0, 90.0), x, y, color, false, Image( FileInputStream("src/main/Pictures/door.jpeg"))):
 
   shape.fill = Color.White
 
@@ -95,14 +98,14 @@ class Door( width: Int, lenght: Int, x: Int, y: Int, color: Color) extends Furni
     case _ => shape.fill = Pink
 
 
-class Window( width: Int, lenght: Int, x: Int, y: Int) extends Furniture( "Window", width, lenght, false, Rectangle(width, lenght), x, y, Color.Blue, false):
+class Window( width: Int, lenght: Int, x: Int, y: Int) extends Furniture( "Window", width, lenght, false, Rectangle(width, lenght), x, y, Color.Blue, false, Image(FileInputStream("src/main/Pictures/window.jpeg"))):
   this.shape.fill = this.color
 
-class Rug( width: Double, lenght: Double, x: Double, y: Double, color: Color) extends Furniture( "Rug", width, lenght, true, Rectangle( width, lenght), x, y, color, true)
+class Rug( width: Double, lenght: Double, x: Double, y: Double, color: Color) extends Furniture( "Rug", width, lenght, true, Rectangle( width, lenght), x, y, color, true, Image( FileInputStream("src/main/Pictures/Rug.jpeg")))
 
-class Lamp( width: Int, x: Double, y: Double, color: Color) extends Furniture( "Lamp", width, 1, false, Circle( width ), x, y, color, true)
+class Lamp( width: Int, x: Double, y: Double, color: Color) extends Furniture( "Lamp", width, 1, false, Circle( width ), x, y, color, true, Image( FileInputStream("src/main/Pictures/cealingLight.jpeg")))
 
-class Counter( width: Int, lenght: Int, x: Int, y: Int, color: Color) extends Furniture("Counter", width, lenght, false, Rectangle( width, lenght), x, y, color, false):
+class Counter( width: Int, lenght: Int, x: Int, y: Int, color: Color) extends Furniture("Counter", width, lenght, false, Rectangle( width, lenght), x, y, color, false, Image( FileInputStream("src/main/Pictures/counter.jpeg"))):
 
   shape.fill = Color.White
   shape.setStrokeWidth(5)

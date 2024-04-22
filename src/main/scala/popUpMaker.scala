@@ -6,6 +6,7 @@ import scalafx.scene.shape.{Arc, ArcType, Circle, Ellipse, Rectangle}
 import scalafx.scene.transform.Rotate
 import scalafx.stage.Stage
 import scalafx.scene.SceneIncludes.jfxColor2sfx
+import scalafx.scene.image.ImageView
 
 import scala.collection.mutable.ListBuffer
 
@@ -49,7 +50,7 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
   copyOfFurniture.changeColor( n.color )
   val shape = copyOfFurniture.shape
   shape.getTransforms.addAll( n.shape.getTransforms )
-  
+
   val colorPicker = ColorPicker( n.color )
   colorPicker.onAction = (event) => copyOfFurniture.changeColor(colorPicker.getValue)
 
@@ -109,13 +110,17 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
     case _ =>
       changePanel.children = Array( colorPicker, rotateButton, scalingWidth, scalingHeight)
 
+  val image = new ImageView(n.image)
+  image.fitWidth = 300
+  image.fitHeight = 300
 
   shapePanel.children = Array( shape)
   submitOrDelete.children = Array( submitButton, deleteButton )
-  grid.add(label1, 0, 0, 2, 1)
-  grid.add(shape, 1, 2)
-  grid.add(submitOrDelete, 0, 5,3, 1)
-  grid.add(changePanel, 2, 2, 3, 1)
+  grid.add(label1, 2, 0, 2, 1)
+  grid.add(shape, 3, 2)
+  grid.add(submitOrDelete, 2, 5,3, 1)
+  grid.add(changePanel, 4, 2, 3, 1)
+  grid.add( image, 0, 0, 2, 7 )
 
   val scene = new Scene(grid)
 
