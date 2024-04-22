@@ -2,8 +2,6 @@
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Shape.sfxShape2jfx
 import scalafx.scene.shape.{Arc, ArcType, Circle, Ellipse, Rectangle, Shape}
-import scalafx.scene.text.FontWeight.Black
-import scalafx.stage.StageStyle.Transparent
 
 /** Alustava luokkarakenne, täytyy tehdä valmiiksi myöhemmin **/
 
@@ -34,8 +32,14 @@ class Furniture( val fname: String,  width: Double,  lenght: Double, val canHave
   
   /** Vaihtaa huonekaluolion säilyttämää väriä ja samalla muuttaa siitä mahdollisesti piirretyn version värin */
   def changeColor( c: Color) =
-    color = c
-    this.shape.fill = c
+    shape match
+      case shape: Arc =>
+        shape.strokeWidth = 3
+        shape.stroke = Color.Black
+        shape.fill = Color.White
+      case _ =>
+        color = c
+        this.shape.fill = c
     
   val f = this
 
@@ -66,16 +70,21 @@ class Furniture( val fname: String,  width: Double,  lenght: Double, val canHave
 class Wall(width: Int, length: Int, x: Int, y: Int, color: Color) extends Furniture("Wall", width, length, false,  Rectangle(width, length), x, y, color, false ):
   this.shape.fill = this.color
 
-class Door( width: Int, lenght: Int, x: Int, y: Int) extends Furniture( "Door", width, lenght, false, Arc(0, 0, width, lenght , 0.0, 90.0), x, y, Color.Black, false):
+class Door( width: Int, lenght: Int, x: Int, y: Int, color: Color) extends Furniture( "Door", width, lenght, false, Arc(0, 0, width, lenght , 0.0, 90.0), x, y, color, false):
 
-  this.shape.strokeWidth = 3
-  this.shape.stroke = Color.Black
-  this.shape.fill = Color.White
+  shape.fill = Color.White
 
-  this.shape match
-    case shape: Arc => shape.setType(ArcType.ROUND)
+  shape match
+    case shape: Arc =>
+      shape.setType(ArcType.ROUND)
+      shape.setStrokeWidth(3)
+      shape.setStroke( Color.Black )
 
 
-class Window( width: Int, x: Int, y: Int) extends Furniture( "Window", width, 2, false, Rectangle(width, 2), x, y, Color.Black, false):
+class Window( width: Int, lenght: Int, x: Int, y: Int) extends Furniture( "Window", width, lenght, false, Rectangle(width, lenght), x, y, Color.Blue, false):
   this.shape.fill = this.color
+
+class Rug( width: Double, lenght: Double, x: Double, y: Double, color: Color) extends Furniture( "Rug", width, lenght, true, Rectangle( width, lenght), x, y, color, true)
+
+class Lamp( width: Int, x: Double, y: Double, color: Color) extends Furniture( "Lamp", width, 1, false, Circle( width ), x, y, color, true)
 

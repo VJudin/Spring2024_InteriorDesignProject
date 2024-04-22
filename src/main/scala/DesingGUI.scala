@@ -1,3 +1,4 @@
+import DesingGUI.floorPlanScale
 import javafx.scene.Node
 import scalafx.application.JFXApp3
 import scalafx.event.EventHandler
@@ -41,6 +42,7 @@ object DesingGUI extends JFXApp3:
 
     val root2 = VBox()
 
+    val spaceForBottom = stage.height.toDouble - 85
 
     val scene1 = Scene(parent = root)
     stage.scene = scene1
@@ -49,33 +51,33 @@ object DesingGUI extends JFXApp3:
     val sidePanel2 = new VBox()
 
     val scroll =  new ScrollPane()
-    scroll.background = Background.fill(White)
-    scroll.prefViewportHeight = stage.height.toDouble - 70
+    scroll.background = Background.fill(Black)
+    scroll.prefViewportHeight = spaceForBottom
     scroll.prefViewportWidth = stage.width.toDouble / 4
     scroll.setContent( sidePanel )
     scroll.hbarPolicy = ScrollPane.ScrollBarPolicy.Never
     scroll.hmax = 0
 
     val scroll2 = new ScrollPane()
-    scroll2.background = Background.fill(White)
-    scroll2.prefViewportHeight = stage.height.toDouble - 70
+    scroll2.background = Background.fill(Black)
+    scroll2.prefViewportHeight = spaceForBottom
     scroll2.prefViewportWidth = stage.width.toDouble / 4
     scroll2.setContent( sidePanel2 )
     scroll2.hbarPolicy = ScrollPane.ScrollBarPolicy.Never
     scroll2.hmax = 0
 
     val furniturePane = new Pane():
-      prefHeight = stage.height.toDouble - 70
+      prefHeight = spaceForBottom
       prefWidth  = stage.width.toDouble * 3/4
     furniturePane.setLayoutX(0)
     furniturePane.setLayoutY(0)
 
     val floorplanDesignPane = new Pane():
-      prefHeight = stage.height.toDouble - 70
+      prefHeight = spaceForBottom
       prefWidth  = stage.width.toDouble * 3/4
 
     val canvas = new Rectangle():
-      height = stage.height.toDouble - 70
+      height = spaceForBottom
       width = stage.width.toDouble * 3/4
       fill = White
     canvas.setLayoutX(0)
@@ -85,13 +87,13 @@ object DesingGUI extends JFXApp3:
 
     floorPlanScale = (stage.width.toDouble * 3/4) / 900.0
     var planningScaleX = (stage.width.toDouble * 3 / 4) / 400
-    var planningScaleY = (stage.height.toDouble - 70) / 200
+    var planningScaleY = spaceForBottom / 200
 
 
 /** Testi huonekaluja ja huonekaluikkunoita */
 
     var mainScene = new ImageView(Image(FileInputStream("/Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/test/piirrustus.jpeg"))):
-      fitHeight = stage.height.toDouble - 70
+      fitHeight = spaceForBottom
       fitWidth = stage.width.toDouble * 3/4
     mainScene.setLayoutX(0)
     mainScene.setLayoutY(0)
@@ -110,7 +112,117 @@ object DesingGUI extends JFXApp3:
       children = Array(stack2, scroll2)
 
     val allFurniture = ListBuffer[Furniture]()
-    def scaleInput(): Stage =
+
+    val addButton = new Button( "Add floorplan"):
+      onAction = (event) =>
+        val fileChooser = new FileChooser():
+          extensionFilters.add( ExtensionFilter("jpg and png", Seq("*.jpg", "*.png")) )
+        val floorplan = fileChooser.showOpenDialog(stage)
+        if floorplan != null then
+          val image = Image(FileInputStream(floorplan.getAbsolutePath))
+          mainScene = new ImageView(image):
+            fitHeight = stage.height.toDouble - 80
+            fitWidth = stage.width.toDouble * 3/4
+          allFurniture.clear()
+          furniturePane.children.clear()
+          stack.children.clear()
+          stack.children = Array( mainScene, furniturePane)
+          scaleInput().show()
+
+
+    val testFurniture = new Furniture("Sofa", 200, 100, true, Rectangle(200, 100), 300, 300, OrangeRed, false)
+    val testFurniture2 = new Furniture( "Table", 40, 40, true, Circle(40), 200, 200, Blue, false)
+    val testFurniture4 = new Furniture( "Coffee table", 100, 50, true, Ellipse(100, 100, 30, 20), 100, 100, Green, false)
+    val testFurniture5 = new Rug( 100, 100, 100, 100, GreenYellow)
+    val testLamp = new Lamp( 20, 100, 100, Yellow)
+    val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), (spaceForBottom / 3), furniturePane, allFurniture)
+    val tablePanel = new FurniturePanel( testFurniture2, (stage.width.toDouble / 4), (spaceForBottom / 3), furniturePane, allFurniture)
+    val sofaTablePanel = new FurniturePanel( testFurniture4, (stage.width.toDouble / 4), (spaceForBottom / 3), furniturePane, allFurniture)
+    val rugPanel = new FurniturePanel( testFurniture5, (stage.width.toDouble / 4), (spaceForBottom / 3), furniturePane, allFurniture)
+    val lampPanel2 = new FurniturePanel(testLamp,(stage.width.toDouble / 4), (spaceForBottom / 3), furniturePane, allFurniture )
+
+    val testWall = new Wall(200, 10, 300, 300, Black)
+    val testDoor = new Door(100, 100, 300, 300, Black)
+    val testWindow = new Window(100, 10, 300, 300)
+    val allWalls = ListBuffer[Furniture]()
+    val wallPanel = new FurniturePanel(testWall, (stage.width.toDouble / 4), (spaceForBottom / 3), floorplanDesignPane, allWalls)
+    val doorPanel = new FurniturePanel(testDoor,(stage.width.toDouble / 4), (spaceForBottom / 3), floorplanDesignPane, allWalls)
+    val windowPanel = new FurniturePanel( testWindow, (stage.width.toDouble / 4), (spaceForBottom / 3), floorplanDesignPane, allWalls)
+
+    val save1 = saveButtonMaker(stage, mainScene, stack)
+    val save2 = saveButtonMaker(stage, mainScene, stack2)
+
+    val restartButton2 = new Button( "Restart" ):
+      onAction = (event) =>
+        floorplanDesignPane.children.clear()
+        allWalls.clear()
+
+    val useThisFloorPlanButton = new Button( "Use this floorplan" ):
+      onAction = (event) =>
+        allFurniture.addAll( allWalls )
+        val writable = new WritableImage(mainScene.getFitWidth.toInt, mainScene.getFitHeight.toInt)
+        stack2.snapshot(null, writable)
+        val image = sfxImage2jfx(writable)
+        mainScene = new ImageView(image):
+            fitHeight = spaceForBottom
+            fitWidth = stage.width.toDouble * 3/4
+        stack.children.clear()
+        stack.children = Array(mainScene, furniturePane)
+        scene1.root = root
+
+
+    val bottomBar = bottomBarMaker()
+    val bottomBar2 = bottomBarMaker()
+
+
+    val designYourOwnButton = new Button( "Design your own floorplan"):
+      onAction = (event) =>
+        scene1.root = root2
+        val returnButton = new Button( "Go back"):
+          onAction = (event) =>
+            scene1.root = root
+        bottomBar2.children = Array(returnButton, save2, restartButton2, useThisFloorPlanButton)
+        root2.children = Array(secondView, bottomBar2)
+
+    val restartButton = new Button( "Restart" ):
+      onAction = (event) =>
+        furniturePane.children.clear()
+        allFurniture.clear()
+
+
+    bottomBar.children = Array(addButton, save1, designYourOwnButton, restartButton)
+    sidePanel.children = Array(lampPanel2, tablePanel, sofaPanel, sofaTablePanel, rugPanel )
+    sidePanel2.children = Array( wallPanel, doorPanel, windowPanel )
+    root.children = Array(mainView, bottomBar)
+
+
+  end start
+
+end DesingGUI
+
+/** Metodi uuden tallennusnapin luomiseksi. Vähentää koodin toisteisuutta */
+def saveButtonMaker(s: Stage, mainView: ImageView, stack: StackPane): Button = new Button( "Save"):
+  onAction = (event) =>
+    val fileChooser = new FileChooser():
+      extensionFilters.add( ExtensionFilter("PNG", "*.png") )
+      extensionFilters.add( ExtensionFilter("JPEG", "*.jpg"))
+    fileChooser.setTitle("Save file")
+    val fileToSave = fileChooser.showSaveDialog(s)
+    if fileToSave != null then
+      var writable = new WritableImage( mainView.getFitWidth.toInt, mainView.getFitHeight.toInt)
+      stack.snapshot(null, writable)
+      var rendered = SwingFXUtils.fromFXImage(writable, null)
+      ImageIO.write(rendered, "png", fileToSave)
+
+def bottomBarMaker(): HBox =
+  new HBox():
+    val stroke = BorderStroke(Black, BorderStrokeStyle.Solid, CornerRadii(1), BorderWidths(5))
+      padding = Insets.apply(10, 10, 10, 10)
+      spacing = 10
+      background = Background.fill(Pink)
+      border = Border( Array(stroke), Array[BorderImage]())
+
+def scaleInput(): Stage =
 
       val stage = new Stage()
       stage.setWidth(300)
@@ -138,116 +250,4 @@ object DesingGUI extends JFXApp3:
       stage.setScene(scene)
 
       stage
-
-    val addButton = new Button( "Add floorplan"):
-      onAction = (event) =>
-        val fileChooser = new FileChooser():
-          extensionFilters.add( ExtensionFilter("jpg and png", Seq("*.jpg", "*.png")) )
-        val floorplan = fileChooser.showOpenDialog(stage)
-        if floorplan != null then
-          val image = Image(FileInputStream(floorplan.getAbsolutePath))
-          mainScene = new ImageView(image):
-            fitHeight = stage.height.toDouble - 70
-            fitWidth = stage.width.toDouble * 3/4
-          allFurniture.clear()
-          furniturePane.children.clear()
-          stack.children.clear()
-          stack.children = Array( mainScene, furniturePane)
-          scaleInput().show()
-
-
-    val testFurniture = new Furniture("Sofa", 200, 100, true, Rectangle(200, 100), 300, 300, OrangeRed, false)
-    val testFurniture2 = new Furniture( "Table", 40, 40, true, Circle(40), 200, 200, Blue, false)
-    val testFurniture3 = new Furniture( "Lamp", 20, 20, false, Circle(20), 100, 100, Yellow, true)
-    val testFurniture4 = new Furniture( "Coffee table", 100, 50, true, Ellipse(100, 100, 30, 20), 100, 100, Green, false)
-    val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
-    val tablePanel = new FurniturePanel( testFurniture2, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
-    val lampPanel = new FurniturePanel( testFurniture3, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
-    val sofaTablePanel = new FurniturePanel( testFurniture4, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), furniturePane, allFurniture)
-
-    val testWall = new Wall(200, 10, 300, 300, Black)
-    val testDoor = new Door(100, 100, 300, 300)
-    val testWindow = new Window(100, 300, 300)
-    val allWalls = ListBuffer[Furniture]()
-    val wallPanel = new FurniturePanel(testWall, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allWalls)
-    val doorPanel = new FurniturePanel(testDoor,(stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allWalls)
-    val windowPanel = new FurniturePanel( testWindow, (stage.width.toDouble / 4), ((stage.height.toDouble-70) / 3), floorplanDesignPane, allWalls)
-
-    val save1 = saveButtonMaker(stage, mainScene, stack)
-    val save2 = saveButtonMaker(stage, mainScene, stack2)
-
-    val restartButton2 = new Button( "Restart" ):
-      onAction = (event) =>
-        floorplanDesignPane.children.clear()
-        allWalls.clear()
-
-    val useThisFloorPlanButton = new Button( "Use this floorplan" ):
-      onAction = (event) =>
-        allFurniture.addAll( allWalls )
-        val writable = new WritableImage(mainScene.getFitWidth.toInt, mainScene.getFitHeight.toInt)
-        stack2.snapshot(null, writable)
-        val image = sfxImage2jfx(writable)
-        mainScene = new ImageView(image):
-            fitHeight = stage.height.toDouble - 70
-            fitWidth = stage.width.toDouble * 3/4
-        stack.children.clear()
-        stack.children = Array(mainScene, furniturePane)
-        scene1.root = root
-
-
-    val bottomBar = new HBox():
-      val stroke = BorderStroke(Pink, BorderStrokeStyle.Solid, CornerRadii(1), BorderWidths(3))
-      padding = Insets.apply(10, 10, 10, 10)
-      spacing = 10
-      background = Background.fill(White)
-      border = Border( Array(stroke), Array[BorderImage]())
-
-    val bottomBar2 = new HBox():
-      val stroke = BorderStroke(Pink, BorderStrokeStyle.Solid, CornerRadii(1), BorderWidths(3))
-      padding = Insets.apply(5, 5, 5, 5)
-      spacing = 10
-      background = Background.fill(White)
-      border = Border( Array(stroke), Array[BorderImage]())
-
-    val designYourOwnButton = new Button( "Design your own floorplan"):
-      onAction = (event) =>
-        scene1.root = root2
-        val returnButton = new Button( "Go back"):
-          onAction = (event) =>
-            scene1.root = root
-        bottomBar2.children = Array(returnButton, save2, restartButton2, useThisFloorPlanButton)
-        root2.children = Array(secondView, bottomBar2)
-
-    val restartButton = new Button( "Restart" ):
-      onAction = (event) =>
-        furniturePane.children.clear()
-        allFurniture.clear()
-
-
-    bottomBar.children = Array(addButton, save1, designYourOwnButton, restartButton)
-    sidePanel.children = Array(lampPanel, tablePanel, sofaPanel, sofaTablePanel )
-    sidePanel2.children = Array( wallPanel, doorPanel, windowPanel )
-    root.children = Array(mainView, bottomBar)
-
-
-  end start
-
-end DesingGUI
-
-/** EI TOIMI AINAKAAN VIELÄ */
-
-def saveButtonMaker(s: Stage, mainView: ImageView, stack: StackPane): Button = new Button( "Save"):
-  onAction = (event) =>
-    val fileChooser = new FileChooser():
-      extensionFilters.add( ExtensionFilter("PNG", "*.png") )
-      extensionFilters.add( ExtensionFilter("JPEG", "*.jpg"))
-    fileChooser.setTitle("Save file")
-    val fileToSave = fileChooser.showSaveDialog(s)
-    if fileToSave != null then
-      var writable = new WritableImage( mainView.getFitWidth.toInt, mainView.getFitHeight.toInt)
-      stack.snapshot(null, writable)
-      var rendered = SwingFXUtils.fromFXImage(writable, null)
-      ImageIO.write(rendered, "png", fileToSave)
-
-
 

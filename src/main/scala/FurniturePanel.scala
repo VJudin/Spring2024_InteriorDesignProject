@@ -8,10 +8,13 @@ import scalafx.scene.shape.Shape
 import scalafx.scene.text.Font
 import scalafx.geometry
 import scalafx.scene.Node
+import scalafx.scene.paint.Color
 import scalafx.scene.shape.Shape.sfxShape2jfx
+import scalafx.scene.text.FontWeight.Black
 
 import scala.collection.mutable.ListBuffer
 
+var amountOfLamps = 0
 
 class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, addTo: Pane, listOfFurniture: ListBuffer[Furniture] ) extends VBox:
 
@@ -21,16 +24,16 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
 
   val panel = this
 
-  background = Background.fill(White)
-  val stroke = BorderStroke(Pink, BorderStrokeStyle.Solid, CornerRadii(1), BorderWidths(3))
-  
-  f.shape.scaleX = 0.75
-  f.shape.scaleY = 0.75
+  background = Background.fill(Pink)
+  val stroke = BorderStroke(Color.Black, BorderStrokeStyle.Solid, CornerRadii(1), BorderWidths(5))
+
   val furnitureName = new Label(f.fname):
     font = Font(14)
 
   spacing = 6
   padding = Insets(20, 20, 20, 20)
+
+
 
   var addButton = new Button(s"Add new ${f.fname}"):
     onAction = (event) =>
@@ -38,7 +41,18 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
       val shape = newOne.shape
       newOne.x = addTo.prefWidth.toDouble / 2
       newOne.y = addTo.prefHeight.toDouble / 2
-      addTo.children += shape
+      var indexToAddTo =
+        f match
+          case f: Rug =>
+            0
+          case f: Lamp =>
+            amountOfLamps += 1
+            listOfFurniture.length
+          case _ => listOfFurniture.length - amountOfLamps
+      listOfFurniture += newOne
+      println(indexToAddTo)
+      println(amountOfLamps)
+      addTo.children.add( indexToAddTo, shape )
       shape.setScaleX( DesingGUI.floorPlanScale )
       shape.setScaleY(DesingGUI.floorPlanScale)
       shape.setLayoutX( newOne.x )
@@ -48,7 +62,6 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
       newOne.shape.onMouseClicked  = (event) =>
         if event.getButton == MouseButton.SECONDARY then
           popUpMaker(newOne, addTo, listOfFurniture).show()
-      listOfFurniture += newOne
 
   border = Border( Array(stroke), Array[BorderImage]())
   this.children = Array( furnitureName, f.shape, addButton )

@@ -16,8 +16,6 @@ var h = 0.0
 def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Furniture] ): Stage =
 
   val stage = new Stage()
-  stage.setHeight(500 )
-  stage.setWidth(500 )
   stage.setX( 300 )
   stage.setY( 300 )
 
@@ -31,8 +29,6 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
     hgap = 10
     vgap = 10
     padding = Insets(10, 10, 10, 10)
-    prefWidth = stage.width.toDouble
-    prefHeight = stage.height.toDouble
 
 
   /**val pane = new VBox():
@@ -41,12 +37,10 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
     padding = Insets(10, 10, 10, bigger )
 
   val changables = new HBox():
-    spacing = 20
+    spacing = 20 */
 
   val changePanel = new VBox():
-    prefHeight = stage.height.toDouble
-    prefWidth = 400
-    spacing = 20 */
+    spacing = 20
 
   val submitOrDelete = new HBox():
     spacing = 20
@@ -55,8 +49,8 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
   val label1 = new Label("Modify this piece of furniture")
   val colorPicker = ColorPicker( n.color )
   val copyOfFurniture = n.copy()
+  copyOfFurniture.changeColor( n.color )
   val shape = copyOfFurniture.shape
-  //shape.fill = n.color
   shape.scaleX = 0.75
   shape.scaleY = 0.75
   shape.getTransforms.addAll( n.shape.getTransforms )
@@ -69,16 +63,19 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
         val b = n.width / 2
         padding = Insets( b, b, b, b)
 
-  colorPicker.onAction = (event) => shape.fill = colorPicker.getValue
+  colorPicker.onAction = (event) => copyOfFurniture.changeColor(colorPicker.getValue)
 
-  val scaleWidth = new TextField():
-    promptText = "width"
   val scaleWidth2 = new Spinner[Double](10.0, 500, n.width, 10.0)
-  val scaleHeight = new TextField():
-    promptText = "height"
   val scaleHeight2 = new Spinner[Double](10.0, 500, n.lenght, 10.0)
   val label2 = new Label("cm")
   val label3 = new Label("cm")
+  val scalingWidth = new HBox():
+    spacing = 5
+    children = Array(scaleWidth2, label2)
+  val scalingHeight = new HBox():
+    spacing = 5
+    children = Array(scaleHeight2, label3)
+
 
   val submitButton = new Button( "Submit changes"):
     onAction = (event) =>
@@ -108,37 +105,26 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
         case _ =>
           copyOfFurniture.shape.getTransforms.add( new Rotate( 45, 0, 0 ) )
 
- /** shapePanel.children = Array( shape )
-  changePanel.children = Array(colorPicker, rotateButton)
-  changables.children = Array( shapePanel, changePanel )
-  submitOrDelete.children = Array( submitButton, deleteButton )
-  pane.children = Array(label1, changables, submitOrDelete ) */
+
+  n.shape match
+    case shape: Circle =>
+      changePanel.children = Array( colorPicker, rotateButton, scalingWidth)
+    case shape: Arc =>
+      changePanel.children = Array( rotateButton, scalingWidth, scalingHeight)
+    case _ =>
+      changePanel.children = Array( colorPicker, rotateButton, scalingWidth, scalingHeight)
+
+
   shapePanel.children = Array( shape)
   submitOrDelete.children = Array( submitButton, deleteButton )
+  //changePanel.children = Array( colorPicker, rotateButton, scalingWidth, scalingHeight)
   grid.add(label1, 0, 0, 2, 1)
   grid.add(shape, 1, 2)
   grid.add(submitOrDelete, 0, 5,3, 1)
-  grid.add(colorPicker, 2, 1, 3, 1)
-  grid.add(rotateButton, 2, 2, 3, 1)
-  grid.add(scaleWidth2, 2, 3, 3, 1)
-  grid.add(label2, 5, 3)
-  grid.add( scaleHeight2, 2, 4, 3, 1)
-  grid.add(label3, 5,4)
-
+  grid.add(changePanel, 2, 2, 3, 1)
 
   val scene = new Scene(grid)
 
   stage.setScene(scene)
 
   stage
-
-def inputValidator( field: TextField, n: Furniture ) =
-  val input = field.text().toDoubleOption
-  input match
-    case Some(number) =>
-      if number <= 0 then
-        println("hei")
-      else
-        w = number
-    case _ =>
-        println("moi")

@@ -2,13 +2,13 @@ import DesingGUI.floorPlanScale
 import scalafx.scene.image.Image
 import scalafx.scene.layout.Pane
 import scalafx.scene.paint.Color
-import scalafx.scene.paint.Color.Black
-import scalafx.scene.shape.{Arc, ArcType, Circle, Ellipse, Rectangle, Shape}
+import scalafx.scene.shape.{Arc, Circle, Ellipse, Rectangle, Shape}
 
 import scala.collection.mutable.ListBuffer
 
 class DraggableMaker:
 
+  /** Alustetaan tarvittavat muuttujat */
   private var mouseAnchorX = 0.0
   private var mouseAnchorY = 0.0
   private var mouseOffsetFromNodeX = 0.0
@@ -32,7 +32,7 @@ class DraggableMaker:
     collisionDetected
 
 
-
+  /** Tarkistaa, että huonekalu on käyttöliittymän näkymässä */
   def isOutOfBounds(coordX: Double, coordY: Double, s: Furniture, a: Pane): Boolean =
     val parentBounds = a.getLayoutBounds
     val paneWidth = parentBounds.getMaxX
@@ -43,12 +43,14 @@ class DraggableMaker:
     var minY = 0.0
     val width = s.width * floorPlanScale
     val height = s.lenght * floorPlanScale
+    val errorX = s.width - width
+    val errorY = height - s.lenght
     s.shape match
       case shape: Rectangle =>
-        maxX = paneWidth - width
-        maxY = paneHeight - height
-        minX = parentBounds.getMinX
-        minY = parentBounds.getMinY
+        maxX = paneWidth - s.width + errorX
+        maxY = paneHeight - s.lenght - errorY
+        minX = parentBounds.getMinX - errorX
+        minY = parentBounds.getMinY + errorY
       case shape: Circle =>
         minX = width
         maxX = paneWidth - width
@@ -80,8 +82,10 @@ class DraggableMaker:
       true
     else 
       false
-
+      
+  /** Metodi, joka tekee huonekalusta liikutettavan */
   def makeDraggable( a: Furniture, b: ListBuffer[Furniture], c: Pane ) =
+    
     var n = a.shape
 
     n.setOnMousePressed((event) =>
