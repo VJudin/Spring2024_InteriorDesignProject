@@ -4,6 +4,7 @@ import scalafx.scene.layout.Pane
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.{Arc, Circle, Ellipse, Rectangle, Shape}
 
+import java.io.FileInputStream
 import scala.collection.mutable.ListBuffer
 
 class DraggableMaker:
@@ -19,9 +20,12 @@ class DraggableMaker:
   /** Tarkistaa, onko huonekalun kohdalla toista huonekalua, jonka päälle se ei voi mennä */
   def checkIntersection( s: Furniture, b: ListBuffer[Furniture] ) =
     var collisionDetected = false
+    /** Filteröidään huonekalujen listasta pois tarkasteltava huonekalu */
     var d = b.filter( x => !x.equals(s))
     if d.nonEmpty then
       for furniture <- d do
+    /** Jos huonekalun päälle voidaan laittaa toinen huonekalu ja kyseinen huonekalu voi olla toisen huonekalun päällä
+      * ei tarvitse huomioida huonekalujen päällekkäisyyttä */
         if s.canBePlacedOnTop && furniture.canHaveOnTop then
           collisionDetected = false
         else
@@ -32,44 +36,57 @@ class DraggableMaker:
     collisionDetected
 
 
-  /** Tarkistaa, että huonekalu on käyttöliittymän näkymässä */
-  def isOutOfBounds(coordX: Double, coordY: Double, s: Furniture, a: Pane): Boolean =
-    val parentBounds = a.getLayoutBounds
-    val paneWidth = parentBounds.getMaxX
-    val paneHeight = parentBounds.getMaxY
-    var maxX = 0.0
-    var maxY = 0.0
-    var minX = 0.0
-    var minY = 0.0
-    val width = s.width * floorPlanScale
-    val height = s.lenght * floorPlanScale
-    val errorX = s.width - width
-    val errorY = height - s.lenght
-    s.shape match
-      case shape: Rectangle =>
-        maxX = paneWidth - s.width + errorX
-        maxY = paneHeight - s.lenght - errorY
-        minX = parentBounds.getMinX - errorX
-        minY = parentBounds.getMinY + errorY
-      case shape: Circle =>
-        minX = width
-        maxX = paneWidth - width
-        minY = width
-        maxY = paneHeight - width
-      case  shape: Ellipse =>
-        minX = width
-        maxX = paneWidth - width
-        minY = height
-        maxY = paneHeight - height
-      case shape: Arc =>
-        maxX = paneWidth
-        maxY = paneHeight
-    if coordX <= maxX && coordX >= minX && coordY <= maxY && coordY >= minY then
+  /** Tarkistaa, että huonekalu on käyttöliittymän näkymässä vertaamalla huonekalun ja Panen boundseja. */
+  def isOutOfBounds(s: Furniture, a: Pane): Boolean =
+    val boundsOfShape = s.shape.getBoundsInParent
+    val boundsOfPane = a.getBoundsInParent
+    if boundsOfShape.getMinY > boundsOfPane.getMinY && boundsOfShape.getMinX > boundsOfPane.getMinX && boundsOfShape.getMaxX < boundsOfPane.getMaxX && boundsOfShape.getMaxY < boundsOfPane.getMaxY then
       false
     else
       true
+     
       
-  def wallChecker( s: Furniture, where: Pane, from: Image, allFurniture: ListBuffer[Furniture] ) =
+  /** Metodi, joka tekee huonekalusta liikutettavan */
+  def makeDraggable( a: Furniture, b: ListBuffer[Furniture], c: Pane ) =
+    
+  /** Tallennetaan muuttujaan liikutettava muoto */
+    var n = a.shape
+
+    /** Kun muotoa klikataan, alustetaan tietyt tiedot sen liikuttamista ja myöhempiä metodeja varten */
+    n.setOnMousePressed((event) =>
+      mouseAnchorX = event.getSceneX
+      mouseAnchorY = event.getSceneY
+      mouseOffsetFromNodeX = a.x - mouseAnchorX
+      mouseOffsetFromNodeY = a.y - mouseAnchorY
+      priorPositionX = n.getLayoutX
+      priorPositionY = n.getLayoutY)
+
+    /** Kun kuviota raahataan hiirellä se liikkuu hiiren mukana */
+    n.setOnMouseDragged((event) =>
+      n.setTranslateX(event.getSceneX - mouseAnchorX )
+      n.setTranslateY(event.getSceneY - mouseAnchorY )
+      )
+
+    /** Kun kuviosta päästetään irti suoritetaan tarkistukset, 
+     * mikäli huonekalu on jonkin toisen huonekalun päällä tai jokin osa siitä on 
+     * käyttöliittymän näkymän ulkopuolella, palautetaan kuvio alkuperäisiin koordinaatteihinsa */
+    n.setOnMouseReleased((event) =>
+      if checkIntersection( a, b ) then
+        n.setLayoutX( priorPositionX)
+        n.setLayoutY( priorPositionY)
+      else if isOutOfBounds( a, c) then
+        n.setLayoutX( priorPositionX)
+        n.setLayoutY( priorPositionY)
+      else
+        n.setLayoutX( event.getSceneX + mouseOffsetFromNodeX)
+        n.setLayoutY( event.getSceneY + mouseOffsetFromNodeY)
+        a.x = event.getSceneX + mouseOffsetFromNodeX
+        a.y = event.getSceneY + mouseOffsetFromNodeY
+      n.setTranslateX(0)
+      n.setTranslateY(0))
+    
+    
+/** def wallChecker( s: Furniture, from: Image ) =
     val reader = from.getPixelReader
     val untilX = s.width.toInt
     val untilY = s.lenght.toInt
@@ -81,37 +98,4 @@ class DraggableMaker:
     if isOnWall.nonEmpty then 
       true
     else 
-      false
-      
-  /** Metodi, joka tekee huonekalusta liikutettavan */
-  def makeDraggable( a: Furniture, b: ListBuffer[Furniture], c: Pane ) =
-    
-    var n = a.shape
-
-    n.setOnMousePressed((event) =>
-      mouseAnchorX = event.getSceneX
-      mouseAnchorY = event.getSceneY
-      mouseOffsetFromNodeX = a.x - mouseAnchorX
-      mouseOffsetFromNodeY = a.y - mouseAnchorY
-      priorPositionX = n.getLayoutX
-      priorPositionY = n.getLayoutY)
-
-    n.setOnMouseDragged((event) =>
-      n.setTranslateX(event.getSceneX - mouseAnchorX )
-      n.setTranslateY(event.getSceneY - mouseAnchorY )
-      )
-
-    n.setOnMouseReleased((event) =>
-      if checkIntersection( a, b ) then
-        n.setLayoutX( priorPositionX)
-        n.setLayoutY( priorPositionY)
-      else if isOutOfBounds(event.getSceneX + mouseOffsetFromNodeX, event.getSceneY + mouseOffsetFromNodeY, a, c) then
-        n.setLayoutX( priorPositionX)
-        n.setLayoutY( priorPositionY)
-      else
-        n.setLayoutX( event.getSceneX + mouseOffsetFromNodeX)
-        n.setLayoutY( event.getSceneY + mouseOffsetFromNodeY)
-        a.x = event.getSceneX + mouseOffsetFromNodeX
-        a.y = event.getSceneY + mouseOffsetFromNodeY
-      n.setTranslateX(0)
-      n.setTranslateY(0))
+      false*/

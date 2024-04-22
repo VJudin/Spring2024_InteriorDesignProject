@@ -71,6 +71,8 @@ object DesingGUI extends JFXApp3:
       prefWidth  = stage.width.toDouble * 3/4
     furniturePane.setLayoutX(0)
     furniturePane.setLayoutY(0)
+    furniturePane.setShape( Rectangle.sfxRectangle2jfx(Rectangle(stage.width.toDouble * 3/4, spaceForBottom)) )
+
 
     val floorplanDesignPane = new Pane():
       prefHeight = spaceForBottom
@@ -92,7 +94,7 @@ object DesingGUI extends JFXApp3:
 
 /** Testi huonekaluja ja huonekaluikkunoita */
 
-    var mainScene = new ImageView(Image(FileInputStream("/Users/vilmajudin/Desktop/Koulu hommat/Vuosi 1/Periodi 3/MagicOfInteriorDesign/src/test/piirrustus.jpeg"))):
+    var mainScene = new ImageView(Image(FileInputStream("src/test/piirrustus.jpeg"))):
       fitHeight = spaceForBottom
       fitWidth = stage.width.toDouble * 3/4
     mainScene.setLayoutX(0)
@@ -142,12 +144,14 @@ object DesingGUI extends JFXApp3:
     val lampPanel2 = new FurniturePanel(testLamp,(stage.width.toDouble / 4), (spaceForBottom / 3), furniturePane, allFurniture )
 
     val testWall = new Wall(200, 10, 300, 300, Black)
-    val testDoor = new Door(100, 100, 300, 300, Black)
+    val testDoor = new Door(100, 100, 300, 300, White)
     val testWindow = new Window(100, 10, 300, 300)
+    val testCounter = new Counter( 100, 100, 300, 300, Black)
     val allWalls = ListBuffer[Furniture]()
     val wallPanel = new FurniturePanel(testWall, (stage.width.toDouble / 4), (spaceForBottom / 3), floorplanDesignPane, allWalls)
     val doorPanel = new FurniturePanel(testDoor,(stage.width.toDouble / 4), (spaceForBottom / 3), floorplanDesignPane, allWalls)
     val windowPanel = new FurniturePanel( testWindow, (stage.width.toDouble / 4), (spaceForBottom / 3), floorplanDesignPane, allWalls)
+    val counterPanel = new FurniturePanel(testCounter,(stage.width.toDouble / 4), (spaceForBottom / 3), floorplanDesignPane, allWalls )
 
     val save1 = saveButtonMaker(stage, mainScene, stack)
     val save2 = saveButtonMaker(stage, mainScene, stack2)
@@ -192,7 +196,7 @@ object DesingGUI extends JFXApp3:
 
     bottomBar.children = Array(addButton, save1, designYourOwnButton, restartButton)
     sidePanel.children = Array(lampPanel2, tablePanel, sofaPanel, sofaTablePanel, rugPanel )
-    sidePanel2.children = Array( wallPanel, doorPanel, windowPanel )
+    sidePanel2.children = Array( wallPanel, doorPanel, windowPanel, counterPanel )
     root.children = Array(mainView, bottomBar)
 
 

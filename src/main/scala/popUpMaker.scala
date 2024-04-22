@@ -12,58 +12,52 @@ import scala.collection.mutable.ListBuffer
 var w = 0.0
 var h = 0.0
 
-/** Metodi, joka tuottaa popUp ikkunan huonekalun värin vaihtamiseksi */
+/** Metodi, joka tuottaa popUp ikkunan joka mahdollistaa huonekalun ominaisuuksien muuttamisen */
 def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Furniture] ): Stage =
 
   val stage = new Stage()
   stage.setX( 300 )
   stage.setY( 300 )
 
+  /** Tarkistetaan, onko huonekalun leveys vai pituus suurempi */
   val bigger =
     if n.width < n.lenght then
       n.lenght
     else
       n.width
 
+ /** Luodaan uusi GradPane, johon lisätään kaikki popUpin elementit */
   val grid = new GridPane():
     hgap = 10
     vgap = 10
     padding = Insets(10, 10, 10, 10)
 
-
-  /**val pane = new VBox():
-    margin = Insets(10)
-    spacing = 10
-    padding = Insets(10, 10, 10, bigger )
-
-  val changables = new HBox():
-    spacing = 20 */
-
+  /** Paneeli, jossa säilytetään huonekalun muutokseen liittyviä kenttiä */
   val changePanel = new VBox():
     spacing = 20
 
+  /** Paneeli, joka säilytää submit ja delete napit */
   val submitOrDelete = new HBox():
     spacing = 20
     padding = Insets(20, 20, 20, 20)
 
+  /***/
   val label1 = new Label("Modify this piece of furniture")
-  val colorPicker = ColorPicker( n.color )
+
+  /** Kopioidaan huonekalu ja asetetaan sille kaikki alkuperäisen huonekalun ominaisuudet */
   val copyOfFurniture = n.copy()
   copyOfFurniture.changeColor( n.color )
   val shape = copyOfFurniture.shape
-  shape.scaleX = 0.75
-  shape.scaleY = 0.75
   shape.getTransforms.addAll( n.shape.getTransforms )
-
-  val shapePanel = new VBox():
-      if n.width < n.lenght then
-        val a = n.lenght / 2
-        padding = Insets( a, a ,a, a )
-      else
-        val b = n.width / 2
-        padding = Insets( b, b, b, b)
-
+  
+  val colorPicker = ColorPicker( n.color )
   colorPicker.onAction = (event) => copyOfFurniture.changeColor(colorPicker.getValue)
+
+  /** Paneeli, joka säilyttää kopion */
+  val shapePanel = new VBox():
+    val a = bigger / 2
+    padding = Insets( a, a ,a, a )
+
 
   val scaleWidth2 = new Spinner[Double](10.0, 500, n.width, 10.0)
   val scaleHeight2 = new Spinner[Double](10.0, 500, n.lenght, 10.0)
@@ -77,6 +71,7 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
     children = Array(scaleHeight2, label3)
 
 
+  
   val submitButton = new Button( "Submit changes"):
     onAction = (event) =>
       n.changeColor( colorPicker.getValue )
@@ -108,7 +103,7 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
 
   n.shape match
     case shape: Circle =>
-      changePanel.children = Array( colorPicker, rotateButton, scalingWidth)
+      changePanel.children = Array( colorPicker, scalingWidth)
     case shape: Arc =>
       changePanel.children = Array( rotateButton, scalingWidth, scalingHeight)
     case _ =>
@@ -117,7 +112,6 @@ def popUpMaker(n: Furniture, furnitureIsIn: Pane, listOfFurniture: ListBuffer[Fu
 
   shapePanel.children = Array( shape)
   submitOrDelete.children = Array( submitButton, deleteButton )
-  //changePanel.children = Array( colorPicker, rotateButton, scalingWidth, scalingHeight)
   grid.add(label1, 0, 0, 2, 1)
   grid.add(shape, 1, 2)
   grid.add(submitOrDelete, 0, 5,3, 1)

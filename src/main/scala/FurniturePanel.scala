@@ -10,10 +10,12 @@ import scalafx.geometry
 import scalafx.scene.Node
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Shape.sfxShape2jfx
-import scalafx.scene.text.FontWeight.Black
 
 import scala.collection.mutable.ListBuffer
 
+/** Muuttuja joka mahdollistaa lamppujen määrän seuraamisen sekä sitä kautta
+ * indeksien muuttamisen, selkenee katsottaessa indexToAddTo muuttujaa. Varmistetaan
+ * siis että lamput ovat kaikkien muiden huonekalujen yläpuolella käyttöliittymän näkymässä */
 var amountOfLamps = 0
 
 class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, addTo: Pane, listOfFurniture: ListBuffer[Furniture] ) extends VBox:
@@ -22,25 +24,31 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
   this.prefHeight = givenHeight
   this.prefWidth = givenWidth
 
-  val panel = this
-
-  background = Background.fill(Pink)
-  val stroke = BorderStroke(Color.Black, BorderStrokeStyle.Solid, CornerRadii(1), BorderWidths(5))
-
   val furnitureName = new Label(f.fname):
     font = Font(14)
 
+  /** Taustan värin, reunojen sekä spacingin ja paddingin asettelu */
+  background = Background.fill(Pink)
+  val stroke = BorderStroke(Color.Black, BorderStrokeStyle.Solid, CornerRadii(0), BorderWidths(5))
+  border = Border( Array(stroke), Array[BorderImage]())
   spacing = 6
   padding = Insets(20, 20, 20, 20)
 
 
-
+/** Nappi, jota painamalla huonekalu ilmestyy alustalle */
   var addButton = new Button(s"Add new ${f.fname}"):
     onAction = (event) =>
+      /** Luodaan kopio paneelin huonekalusta ja muutetaan sen x sekä y koordinaatit,
+       * jotta huonekalu ilmestyy käyttöliittymän keskelle */
       var newOne = f.copy()
       val shape = newOne.shape
       newOne.x = addTo.prefWidth.toDouble / 2
       newOne.y = addTo.prefHeight.toDouble / 2
+
+      /** Muutuja, joka tarkistaa mihin indeksiin uusi huonekalu lisätään,
+       * mahdollistaa mattojen olemisen muiden huonekalujen alla ja lamppujen olemisen
+       * kaikista päällimmäisinä. Lamppujen määrä ei vaikuta pohjapiirrustuksen luomiseen 
+       * käytettäviin elementteihin */
       var indexToAddTo =
         f match
           case f: Rug =>
@@ -48,20 +56,33 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
           case f: Lamp =>
             amountOfLamps += 1
             listOfFurniture.length
+          case f: Wall => 0
+          case f: Door => 0
+          case f: Window => 0
           case _ => listOfFurniture.length - amountOfLamps
+
+      /** Lisätään uusi huonekalu kaikkien huonekalujen listaan sekä Paneen, jolloin
+       * se ilmestyy käyttöliittymään */
       listOfFurniture += newOne
-      println(indexToAddTo)
-      println(amountOfLamps)
       addTo.children.add( indexToAddTo, shape )
+
+      /** Skaalataan huonekalu ja sijoitetaan se oikeisiin koordinaatteihin käyttöliittymässä */
       shape.setScaleX( DesingGUI.floorPlanScale )
       shape.setScaleY(DesingGUI.floorPlanScale)
       shape.setLayoutX( newOne.x )
       shape.setLayoutY( newOne.y )
+
+      /** Tehdään huonekalusta raahattava DraggableMaker luokan avulla */
       val draggableMaker = new DraggableMaker()
       draggableMaker.makeDraggable( newOne, listOfFurniture, addTo )
+
+      /** Avaa muutosikkunan heti kun huonekalu lisätään kuvaan */
+      popUpMaker(newOne, addTo, listOfFurniture).show()
+
+      /** Kun uudesta huonekalusta klikataan hiiren toisella näppäimellä, ilmestyy
+       * esiin muutosvalikko */
       newOne.shape.onMouseClicked  = (event) =>
         if event.getButton == MouseButton.SECONDARY then
           popUpMaker(newOne, addTo, listOfFurniture).show()
 
-  border = Border( Array(stroke), Array[BorderImage]())
   this.children = Array( furnitureName, f.shape, addButton )
