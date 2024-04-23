@@ -1,10 +1,6 @@
-import DesingGUI.floorPlanScale
-import scalafx.scene.image.Image
 import scalafx.scene.layout.Pane
-import scalafx.scene.paint.Color
-import scalafx.scene.shape.{Arc, Circle, Ellipse, Rectangle, Shape}
+import scalafx.scene.shape.Shape
 
-import java.io.FileInputStream
 import scala.collection.mutable.ListBuffer
 
 class DraggableMaker:
@@ -19,22 +15,24 @@ class DraggableMaker:
 
   /** Tarkistaa, onko huonekalun kohdalla toista huonekalua, jonka päälle se ei voi mennä */
   def checkIntersection( s: Furniture, b: ListBuffer[Furniture] ) =
-    var collisionDetected = false
+    /** Bufferi, joka kerää kaikki arvot huonekalun kohdasta verrattuna muihin huonekaluihin */
+    val collisions = ListBuffer[Boolean]()
     /** Filteröidään huonekalujen listasta pois tarkasteltava huonekalu */
     var d = b.filter( x => !x.equals(s))
     if d.nonEmpty then
       for furniture <- d do
     /** Jos huonekalun päälle voidaan laittaa toinen huonekalu ja kyseinen huonekalu voi olla toisen huonekalun päällä
       * ei tarvitse huomioida huonekalujen päällekkäisyyttä */
-        if s.canBePlacedOnTop && furniture.canHaveOnTop then
-          collisionDetected = false
+        if (s.canBePlacedOnTop && furniture.canHaveOnTop) || (s.canHaveOnTop && furniture.canBePlacedOnTop) then
+          collisions += false
+        else if s.fname == "Wall" && furniture.fname == "Wall" then
+          collisions += false
         else
           if !s.shape.equals(furniture.shape) then
             var intersect = Shape.intersect( furniture.shape, s.shape )
             if intersect.getBoundsInLocal.getWidth != -1 then
-             collisionDetected = true
-    collisionDetected
-
+             collisions += true
+    collisions.contains( true )
 
   /** Tarkistaa, että huonekalu on käyttöliittymän näkymässä vertaamalla huonekalun ja Panen boundseja. */
   def isOutOfBounds(s: Furniture, a: Pane): Boolean =
@@ -51,6 +49,7 @@ class DraggableMaker:
     
   /** Tallennetaan muuttujaan liikutettava muoto */
     var n = a.shape
+    var e = a.shape.getBoundsInParent
 
     /** Kun muotoa klikataan, alustetaan tietyt tiedot sen liikuttamista ja myöhempiä metodeja varten */
     n.setOnMousePressed((event) =>
@@ -84,18 +83,3 @@ class DraggableMaker:
         a.y = event.getSceneY + mouseOffsetFromNodeY
       n.setTranslateX(0)
       n.setTranslateY(0))
-    
-    
-/** def wallChecker( s: Furniture, from: Image ) =
-    val reader = from.getPixelReader
-    val untilX = s.width.toInt
-    val untilY = s.lenght.toInt
-    var isOnWall = ListBuffer[Boolean]()
-    for x <- s.x.toInt until untilX do
-      for y <- s.y.toInt until untilY do
-        if !reader.getColor(x, y).eq(Color.White) then
-          isOnWall += true
-    if isOnWall.nonEmpty then 
-      true
-    else 
-      false*/

@@ -1,9 +1,9 @@
-import DesingGUI.floorPlanScale
+import DesingGUI.{amountOfLamps, floorPlanScale}
 import javafx.scene.input.MouseButton
 import scalafx.geometry.Insets
 import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.{Background, Border, BorderImage, BorderStroke, BorderStrokeStyle, BorderWidths, CornerRadii, Pane, VBox}
-import scalafx.scene.paint.Color.{Pink, White}
+import scalafx.scene.paint.Color.Pink
 import scalafx.scene.shape.Shape
 import scalafx.scene.text.Font
 import scalafx.geometry
@@ -16,7 +16,6 @@ import scala.collection.mutable.ListBuffer
 /** Muuttuja joka mahdollistaa lamppujen määrän seuraamisen sekä sitä kautta
  * indeksien muuttamisen, selkenee katsottaessa indexToAddTo muuttujaa. Varmistetaan
  * siis että lamput ovat kaikkien muiden huonekalujen yläpuolella käyttöliittymän näkymässä */
-var amountOfLamps = 0
 
 class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, addTo: Pane, listOfFurniture: ListBuffer[Furniture] ) extends VBox:
 
@@ -55,16 +54,17 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
             0
           case f: Lamp =>
             amountOfLamps += 1
-            listOfFurniture.length
+            addTo.children.length
           case f: Wall => 0
           case f: Door => 0
           case f: Window => 0
-          case _ => listOfFurniture.length - amountOfLamps
+          case _ => addTo.children.length - amountOfLamps
 
       /** Lisätään uusi huonekalu kaikkien huonekalujen listaan sekä Paneen, jolloin
        * se ilmestyy käyttöliittymään */
       listOfFurniture += newOne
       addTo.children.add( indexToAddTo, shape )
+      println(amountOfLamps)
 
       /** Skaalataan huonekalu ja sijoitetaan se oikeisiin koordinaatteihin käyttöliittymässä */
       shape.setScaleX( DesingGUI.floorPlanScale )
@@ -74,7 +74,7 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
 
       /** Tehdään huonekalusta raahattava DraggableMaker luokan avulla */
       val draggableMaker = new DraggableMaker()
-      draggableMaker.makeDraggable( newOne, listOfFurniture, addTo )
+      draggableMaker.makeDraggable( newOne, listOfFurniture, addTo)
 
       /** Avaa muutosikkunan heti kun huonekalu lisätään kuvaan */
       popUpMaker(newOne, addTo, listOfFurniture).show()

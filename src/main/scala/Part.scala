@@ -10,23 +10,23 @@ import java.io.FileInputStream
 /** Yläluokka */
 class Part ( name: String, var width: Double, var lenght: Double, canHaveOnTop: Boolean, val shape: Shape, var x: Double, var y: Double):
 
-  /** Metodi joka mahdollistaa huonekalun koon muuttamisen*/
+  /** Metodi joka mahdollistaa huonekalun koon muuttamisen. Match case johtuu siitä, että eri huonekaluilla eri mitat muuttuvat */
   def changeSize( w: Double, l: Double) =
     width = w
     lenght = l
     this.shape match
       case shape: Rectangle =>
         shape.width = w
-        shape.height = h
+        shape.height = l
       case shape: Circle =>
         shape.radius = w
       case shape: Ellipse =>
         shape.radiusX = w
-        shape.radiusY = h
+        shape.radiusY = l
       case shape: Arc =>
         shape.setType(ArcType.Round)
         shape.radiusX = w
-        shape.radiusY = h
+        shape.radiusY = l
         shape.startAngle = 0.0
         shape.length = 90.0
       case _ => shape.fill = Pink
