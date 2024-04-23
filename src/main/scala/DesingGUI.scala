@@ -22,9 +22,9 @@ import javax.imageio.ImageIO
 
 object DesingGUI extends JFXApp3:
 
-  var floorPlanScale = 0.0
+  var floorPlanScaleX = 0.0
+  var floorPlanScaleY = 0.0
   var amountOfLamps = 0
-  var image = Image(FileInputStream("src/test/piirrustus.jpeg"))
 
   def start() =
 
@@ -34,10 +34,12 @@ object DesingGUI extends JFXApp3:
       height = 600
       resizable = false
 
-    /** Alkuskaalan kohdalla huoneen leveys on 9m */
-    floorPlanScale = (stage.width.toDouble * 3/4) / 900.0
     /** Tilaa pohjapalkille */
-    val spaceForBottom = stage.height.toDouble - 85
+    val spaceForBottom = stage.height.toDouble - 100
+
+    /** Alkuskaalan kohdalla huoneen leveys on 9m */
+    floorPlanScaleX = (stage.width.toDouble * 3/4) / 300
+    floorPlanScaleY = spaceForBottom / 200
 
     /** Päänäkymän osia */
     val root = VBox()
@@ -117,7 +119,8 @@ object DesingGUI extends JFXApp3:
     val testFurniture = new Furniture("Sofa", 200, 100, true, Rectangle(200, 100), 300, 300, OrangeRed, false, Image( FileInputStream("src/main/Pictures/sohva.jpeg")))
     val testFurniture2 = new Furniture( "Table", 40, 40, true, Circle(40), 200, 200, Blue, false, Image( FileInputStream("src/main/Pictures/table.jpeg")))
     val testFurniture4 = new Furniture( "Coffee table", 100, 50, true, Ellipse(100, 100, 30, 20), 100, 100, Green, false, Image( FileInputStream("src/main/Pictures/coffeeTable.jpeg")))
-    val testFurniture5 = new Rug( 100, 100, 100, 100, GreenYellow)
+    val testFurniture5 = new Rug( 100, 100, 100, 100, Rectangle(100, 100), GreenYellow)
+    val testFurniture6 = new Rug( 100, 100, 100, 100, Circle(100), LightCoral)
     val testLamp = new Lamp( 20, 100, 100, Yellow)
 
     val sofaPanel = new FurniturePanel( testFurniture, (stage.width.toDouble / 4), (spaceForBottom / 3), furniturePane, allFurniture)
@@ -125,6 +128,7 @@ object DesingGUI extends JFXApp3:
     val sofaTablePanel = new FurniturePanel( testFurniture4, (stage.width.toDouble / 4), (spaceForBottom / 3), furniturePane, allFurniture)
     val rugPanel = new FurniturePanel( testFurniture5, (stage.width.toDouble / 4), (spaceForBottom / 3), furniturePane, allFurniture)
     val lampPanel2 = new FurniturePanel(testLamp,(stage.width.toDouble / 4), (spaceForBottom / 3), furniturePane, allFurniture)
+    val roundRugPanel = new FurniturePanel(testFurniture6, (stage.width.toDouble / 4), (spaceForBottom / 3), furniturePane, allFurniture)
 
     val testWall = new Wall(200, 10, 300, 300, Black)
     val testDoor = new Door(100, 100, 300, 300, White)
@@ -163,7 +167,7 @@ object DesingGUI extends JFXApp3:
 
 
     /** Kutsutaan metodia saveButtonMaker, tallennusnappien luomiseksi*/
-    val save1 = saveButtonMaker(stage, mainScene, stack)
+    val save1 = saveButtonMaker(stage, stack)
     val bottomBar = bottomBarMaker()
 
     val restartButton = new Button( "Restart" ):
@@ -182,8 +186,8 @@ object DesingGUI extends JFXApp3:
         scene1.root = root2
 
     /** POHJAPIIRUSTUKSEN SUUNNITTELUNÄKYMÄN NAPIT */
-    
-    val save2 = saveButtonMaker(stage, mainScene, stack2)
+
+    val save2 = saveButtonMaker(stage, stack2)
 
     val useThisFloorPlanButton = new Button( "Use this floorplan" ):
       onAction = (event) =>
@@ -215,24 +219,24 @@ object DesingGUI extends JFXApp3:
 
 
     /** Asetetaan lapset */
-    
+
     bottomBar.children = Array(addButton, save1, designYourOwnButton, restartButton, scaleButton1)
-    
-    sidePanel.children = Array(lampPanel2, tablePanel, sofaPanel, sofaTablePanel, rugPanel )
-    
+
+    sidePanel.children = Array(lampPanel2, tablePanel, sofaPanel, sofaTablePanel, rugPanel, roundRugPanel )
+
     root.children = Array(mainView, bottomBar)
-    
+
     bottomBar2.children = Array(returnButton, save2, restartButton2, useThisFloorPlanButton, scaleButton2)
-    
-    sidePanel2.children = Array( wallPanel, doorPanel, windowPanel, counterPanel ) 
-    
+
+    sidePanel2.children = Array( wallPanel, doorPanel, windowPanel, counterPanel )
+
     root2.children = Array(secondView, bottomBar2)
 
   end start
 
 
   /** Metodi, joka tekee uuden nappulan, jolla voi tallentaa tietyn stackPanen kuvana */
-  def saveButtonMaker(s: Stage, mainView: ImageView, stack: StackPane): Button = new Button( "Save"):
+  def saveButtonMaker(s: Stage, stack: StackPane): Button = new Button( "Save"):
     onAction = (event) =>
       val fileChooser = new FileChooser():
         extensionFilters.add( ExtensionFilter("PNG", "*.png") )
@@ -240,7 +244,7 @@ object DesingGUI extends JFXApp3:
       fileChooser.setTitle("Save file")
       val fileToSave = fileChooser.showSaveDialog(s)
       if fileToSave != null then
-        var writable = new WritableImage( mainView.getFitWidth.toInt, mainView.getFitHeight.toInt)
+        var writable = new WritableImage( stack.getWidth.toInt, stack.getHeight.toInt)
         stack.snapshot(null, writable)
         var rendered = SwingFXUtils.fromFXImage(writable, null)
         ImageIO.write(rendered, "png", fileToSave)
@@ -250,7 +254,7 @@ object DesingGUI extends JFXApp3:
   def bottomBarMaker(): HBox =
     new HBox():
       val stroke = BorderStroke(Black, BorderStrokeStyle.Solid, CornerRadii(1), BorderWidths(5))
-        padding = Insets.apply(10, 10, 10, 10)
+        padding = Insets.apply(17.5, 17.5, 17.5, 17.5)
         spacing = 10
         background = Background.fill(Pink)
         border = Border( Array(stroke), Array[BorderImage]())
@@ -258,7 +262,7 @@ object DesingGUI extends JFXApp3:
 
   /** Metodi, joka mahdollistaa pohjapiirustuksen skaalan muuttamiseen, eli siis käyttäjä voi muuttaa pohjapiirustuksen
    * leveyttä ja korkeutta, jolloin skaala muuttuu myös*/
-  def scaleInput(f: ListBuffer[Furniture]): Stage =
+  def scaleInput(l: ListBuffer[Furniture]): Stage =
 
     val stage = new Stage()
     stage.setWidth(300)
@@ -269,17 +273,30 @@ object DesingGUI extends JFXApp3:
     val pane = new VBox()
 
     val label1 = new Label("The width of your floorplan")
+    val label2 = new Label( "The height of your floorplan")
+    val label3 = new Label( "m")
+    val label4 = new Label( "m")
 
-    val widthField = new Spinner[Double](0.1, 10, 2, 0.1)
+    val widthField = new Spinner[Double](0.1, 10, 5, 0.1)
+    val heightField = new Spinner[Double](0.1, 10, 5, 0.1)
 
+    val scalingWidth = new HBox():
+      spacing = 5
+      children = Array(widthField, label3)
 
+    val scalingHeight = new HBox():
+      spacing = 5
+      children = Array(heightField, label4)
 
     val submit = new Button( "Submit"):
       onAction = (event) =>
-        floorPlanScale = (1000 * 3/4) / (widthField.getValue * 100)
+        floorPlanScaleX = (1000 * 3/4) / (widthField.getValue * 100)
+        floorPlanScaleY = 515 / (heightField.getValue * 100)
         stage.close()
+        l.foreach(x => x.shape.setScaleX(floorPlanScaleX))
+        l.foreach(x => x.shape.setScaleY(floorPlanScaleY))
 
-    pane.children = Array( label1, widthField, submit)
+    pane.children = Array( label1, scalingWidth, label2, scalingHeight, submit)
 
     val scene = new Scene(pane)
     stage.setScene(scene)

@@ -13,13 +13,18 @@ Sen lisäksi aloitin huonekalujen toteutuksen ensin laatimalla FurniturePanel lu
 Tämän kanssa minulla oli aika paljon ongelmia aluksi, mutta kohti ajanjakson loppua sain ohjelman vihdoin lisäämään huonekalun näkymän 
 ylänurkkaan. Tässä kohtaa sitä ei vielä pysty liikuttamaan. 
 
-23.3 - 5.3
+23.3 - 5.4
 Tällä ajanjaksolla tavoitteeni on lisätä ohjelmaan toiminnallisuutta. Aloitin tämän huonekalujen liikkuttamisesta. Siihen kului aika paljon 
 aikaa, mutta sain huonekalujen liikuttamisen toimimaan. Sen jälkeen päätin, että niiden väriä pitäisi pystyä muuttamaan. Värin vaihtamiseen
 ColorPicker osoittautui todella käteväksi. Sen jälkeen ajattelin, että olisi hyvä implementoida se, että huonekalut eivät saa olla toistensa
-päällä. 
+päällä. Ohjelman näkymän saa nyt tallennettua kuvatiedostona.
 
-6.3 - 16.3
+6.4 - 16.4
 Skaalaus on laadittu. Nyt huonetta voi skaalata käyttäjän mieltymyksen mukaan. Huonekalujen kokoa voi myös muuttaa. Sen lisäksi olen yrittänyt
 laatia metodia, joka tarkistaa, että huonekalu ei ole käyttöikkunan ulkopuolella. Olen myös yrittänyt laatia toista metodia, joka tarkistaisi
-pikselien värien avulla onko huonekalu jonkin seinän päällä (eli siis luettaisiin kuvasta seinät ja ovet).
+pikselien värien avulla onko huonekalu jonkin seinän päällä (eli siis luettaisiin kuvasta seinät ja ovet). Loin myös toisen ikkunan,
+jossa käyttäjä voi laatia oman pohjapiirustuksensa.
+
+17.4 - 25.4
+Projektin viimeistelyä. Kommentoin koodia, laadin loppudokumenttia ja etsin mahdollisia bugeja ohjelmasta. Muutin muutamien
+metodien toimintaa, jotta ne toimivat paremmin eivätkä aiheuta ongelmia myöhemmin.

@@ -14,72 +14,76 @@ class DraggableMaker:
   private var priorPositionY = 0.0
 
   /** Tarkistaa, onko huonekalun kohdalla toista huonekalua, jonka päälle se ei voi mennä */
-  def checkIntersection( s: Furniture, b: ListBuffer[Furniture] ) =
+  def checkIntersection(f: Furniture, l: ListBuffer[Furniture] ): Boolean =
     /** Bufferi, joka kerää kaikki arvot huonekalun kohdasta verrattuna muihin huonekaluihin */
     val collisions = ListBuffer[Boolean]()
     /** Filteröidään huonekalujen listasta pois tarkasteltava huonekalu */
-    var d = b.filter( x => !x.equals(s))
+    var d = l.filter(x => !x.equals(f))
     if d.nonEmpty then
       for furniture <- d do
     /** Jos huonekalun päälle voidaan laittaa toinen huonekalu ja kyseinen huonekalu voi olla toisen huonekalun päällä
       * ei tarvitse huomioida huonekalujen päällekkäisyyttä */
-        if (s.canBePlacedOnTop && furniture.canHaveOnTop) || (s.canHaveOnTop && furniture.canBePlacedOnTop) then
+        if (f.canBePlacedOnTop && furniture.canHaveOnTop) || (f.canHaveOnTop && furniture.canBePlacedOnTop) then
           collisions += false
-        else if s.fname == "Wall" && furniture.fname == "Wall" then
+        else if f.fname == "Wall" && furniture.fname == "Wall" then
           collisions += false
         else
-          if !s.shape.equals(furniture.shape) then
-            var intersect = Shape.intersect( furniture.shape, s.shape )
+          if !f.shape.equals(furniture.shape) then
+            var intersect = Shape.intersect( furniture.shape, f.shape )
             if intersect.getBoundsInLocal.getWidth != -1 then
              collisions += true
     collisions.contains( true )
 
   /** Tarkistaa, että huonekalu on käyttöliittymän näkymässä vertaamalla huonekalun ja Panen boundseja. */
-  def isOutOfBounds(s: Furniture, a: Pane): Boolean =
-    val boundsOfShape = s.shape.getBoundsInParent
-    val boundsOfPane = a.getBoundsInParent
+  def isOutOfBounds(f: Furniture, p: Pane): Boolean =
+    val boundsOfShape = f.shape.getBoundsInParent
+    val boundsOfPane = p.getBoundsInParent
     if boundsOfShape.getMinY > boundsOfPane.getMinY && boundsOfShape.getMinX > boundsOfPane.getMinX && boundsOfShape.getMaxX < boundsOfPane.getMaxX && boundsOfShape.getMaxY < boundsOfPane.getMaxY then
       false
     else
       true
-     
-      
+
+
   /** Metodi, joka tekee huonekalusta liikutettavan */
-  def makeDraggable( a: Furniture, b: ListBuffer[Furniture], c: Pane ) =
-    
-  /** Tallennetaan muuttujaan liikutettava muoto */
-    var n = a.shape
-    var e = a.shape.getBoundsInParent
+  def makeDraggable(f: Furniture, l: ListBuffer[Furniture], p: Pane): Unit =
+
+    /** Tallennetaan muuttujaan liikutettava muoto */
+    var n = f.shape
+    var e = f.shape.getBoundsInParent
 
     /** Kun muotoa klikataan, alustetaan tietyt tiedot sen liikuttamista ja myöhempiä metodeja varten */
     n.setOnMousePressed((event) =>
       mouseAnchorX = event.getSceneX
       mouseAnchorY = event.getSceneY
-      mouseOffsetFromNodeX = a.x - mouseAnchorX
-      mouseOffsetFromNodeY = a.y - mouseAnchorY
+      mouseOffsetFromNodeX = f.x - mouseAnchorX
+      mouseOffsetFromNodeY = f.y - mouseAnchorY
       priorPositionX = n.getLayoutX
       priorPositionY = n.getLayoutY)
 
     /** Kun kuviota raahataan hiirellä se liikkuu hiiren mukana */
     n.setOnMouseDragged((event) =>
-      n.setTranslateX(event.getSceneX - mouseAnchorX )
-      n.setTranslateY(event.getSceneY - mouseAnchorY )
-      )
+      n.setTranslateX(event.getSceneX - mouseAnchorX)
+      n.setTranslateY(event.getSceneY - mouseAnchorY)
+    )
 
-    /** Kun kuviosta päästetään irti suoritetaan tarkistukset, 
-     * mikäli huonekalu on jonkin toisen huonekalun päällä tai jokin osa siitä on 
+    /** Kun kuviosta päästetään irti suoritetaan tarkistukset,
+     * mikäli huonekalu on jonkin toisen huonekalun päällä tai jokin osa siitä on
      * käyttöliittymän näkymän ulkopuolella, palautetaan kuvio alkuperäisiin koordinaatteihinsa */
     n.setOnMouseReleased((event) =>
-      if checkIntersection( a, b ) then
-        n.setLayoutX( priorPositionX)
-        n.setLayoutY( priorPositionY)
-      else if isOutOfBounds( a, c) then
-        n.setLayoutX( priorPositionX)
-        n.setLayoutY( priorPositionY)
+      if checkIntersection(f, l) then
+        n.setLayoutX(priorPositionX)
+        n.setLayoutY(priorPositionY)
+      else if isOutOfBounds(f, p) then
+        n.setLayoutX(priorPositionX)
+        n.setLayoutY(priorPositionY)
       else
-        n.setLayoutX( event.getSceneX + mouseOffsetFromNodeX)
-        n.setLayoutY( event.getSceneY + mouseOffsetFromNodeY)
-        a.x = event.getSceneX + mouseOffsetFromNodeX
-        a.y = event.getSceneY + mouseOffsetFromNodeY
+        n.setLayoutX(event.getSceneX + mouseOffsetFromNodeX)
+        n.setLayoutY(event.getSceneY + mouseOffsetFromNodeY)
+        f.x = event.getSceneX + mouseOffsetFromNodeX
+        f.y = event.getSceneY + mouseOffsetFromNodeY
       n.setTranslateX(0)
       n.setTranslateY(0))
+  end makeDraggable
+
+
+end DraggableMaker

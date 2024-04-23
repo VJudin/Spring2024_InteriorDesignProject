@@ -7,11 +7,12 @@ import scalafx.scene.shape.{Arc, ArcType, Circle, Ellipse, Rectangle, Shape}
 
 import java.io.FileInputStream
 
-/** Yläluokka */
-class Part ( name: String, var width: Double, var lenght: Double, canHaveOnTop: Boolean, val shape: Shape, var x: Double, var y: Double):
+class Furniture( val fname: String,  var width: Double,  var lenght: Double, val canHaveOnTop: Boolean, val shape: Shape, var x: Double, var y: Double, var color: Color, val canBePlacedOnTop: Boolean, val image: Image):
 
-  /** Metodi joka mahdollistaa huonekalun koon muuttamisen. Match case johtuu siitä, että eri huonekaluilla eri mitat muuttuvat */
-  def changeSize( w: Double, l: Double) =
+  this.shape.fill = this.color
+
+
+  def changeSize(w: Double, l: Double): Unit =
     width = w
     lenght = l
     this.shape match
@@ -31,13 +32,9 @@ class Part ( name: String, var width: Double, var lenght: Double, canHaveOnTop: 
         shape.length = 90.0
       case _ => shape.fill = Pink
 
-class Furniture( val fname: String,  width: Double,  lenght: Double, val canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double, var color: Color, val canBePlacedOnTop: Boolean, val image: Image) extends Part (fname, width: Double, lenght: Double, canHaveOnTop: Boolean, shape: Shape, x: Double, y: Double):
-
-  this.shape.fill = this.color
-  
   /** Vaihtaa huonekaluolion säilyttämää väriä ja samalla muuttaa siitä mahdollisesti piirretyn version värin.
    * Ovien ja kaappien/tasojen väriä ei pysty vaihtamaan */
-  def changeColor( c: Color) =
+  def changeColor( c: Color): Unit =
     shape match
       case shape: Arc =>
         shape.strokeWidth = 3
@@ -79,8 +76,6 @@ class Furniture( val fname: String,  width: Double,  lenght: Double, val canHave
     new Furniture( fname, width, lenght, canHaveOnTop, shapeOf, 0.0, 0.0, color, canBePlacedOnTop, image)
 
 
-  def compare( second: Furniture ): Boolean = f.fname == second.fname && f.lenght == second.lenght && f.width == second.width && f.shape == second.shape && f.color == second.color && f.x == second.x && f.y == second.y
-
 class Wall(width: Int, length: Int, x: Int, y: Int, color: Color) extends Furniture("Wall", width, length, false,  Rectangle(width, length), x, y, color, false, Image( FileInputStream("src/main/Pictures/wall.jpeg")) ):
   
   this.shape.fill = this.color
@@ -101,7 +96,7 @@ class Door( width: Int, lenght: Int, x: Int, y: Int, color: Color) extends Furni
 class Window( width: Int, lenght: Int, x: Int, y: Int) extends Furniture( "Window", width, lenght, false, Rectangle(width, lenght), x, y, Color.Blue, false, Image(FileInputStream("src/main/Pictures/window.jpeg"))):
   this.shape.fill = this.color
 
-class Rug( width: Double, lenght: Double, x: Double, y: Double, color: Color) extends Furniture( "Rug", width, lenght, true, Rectangle( width, lenght), x, y, color, true, Image( FileInputStream("src/main/Pictures/Rug.jpeg")))
+class Rug( width: Double, lenght: Double, x: Double, y: Double, shape: Shape, color: Color) extends Furniture( "Rug", width, lenght, true, shape, x, y, color, true, Image( FileInputStream("src/main/Pictures/Rug.jpeg")))
 
 class Lamp( width: Int, x: Double, y: Double, color: Color) extends Furniture( "Lamp", width, 1, false, Circle( width ), x, y, color, true, Image( FileInputStream("src/main/Pictures/cealingLight.jpeg")))
 
