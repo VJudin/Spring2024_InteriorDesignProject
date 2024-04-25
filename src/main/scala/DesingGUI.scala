@@ -115,6 +115,7 @@ object DesingGUI extends JFXApp3:
     /** Näiden ListBuffereiden avulla pidetään kirjaa ohjelmassa olevista huonekaluista */
     val allFurniture = ListBuffer[Furniture]()
     val allWalls = ListBuffer[Furniture]()
+    val wallsInFloorPlan = ListBuffer[Furniture]()
 
 
 
@@ -171,6 +172,7 @@ object DesingGUI extends JFXApp3:
             fitWidth = stage.width.toDouble * 3/4
           allFurniture.clear()
           allWalls.clear()
+          wallsInFloorPlan.clear()
           amountOfLamps = 0
           furniturePane.children.clear()
           stack.children.clear()
@@ -187,6 +189,7 @@ object DesingGUI extends JFXApp3:
       onAction = (event) =>
         furniturePane.children.clear()
         allFurniture.clear()
+        allFurniture.addAll( wallsInFloorPlan )
         amountOfLamps = 0
 
     val scaleButton1 = new Button("Change scale"):
@@ -207,7 +210,10 @@ object DesingGUI extends JFXApp3:
      * Pohjapiirustuksen luomisnäkymä nollataan */
     val useThisFloorPlanButton = new Button( "Use this floorplan" ):
       onAction = (event) =>
+        wallsInFloorPlan.clear()
+        allFurniture.clear()
         allFurniture.addAll( allWalls)
+        wallsInFloorPlan.addAll( allWalls )
         val writable = new WritableImage(mainScene.getFitWidth.toInt, mainScene.getFitHeight.toInt)
         stack2.snapshot(null, writable)
         val image = sfxImage2jfx(writable)
