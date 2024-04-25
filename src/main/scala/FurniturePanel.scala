@@ -38,6 +38,8 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
   var addButton = new Button(s"Add new ${f.fname}"):
     onAction = (event) => addFurniture()
 
+  private val draggableMaker = new DraggableMaker()
+  private val popUpMaker = new PopUpMaker
 /** Metodi, joka varsinaisesti lisää huonekalun */
   private def addFurniture(): Unit =
     /** Luodaan kopio paneelin huonekalusta ja muutetaan sen x sekä y koordinaatit,
@@ -67,7 +69,6 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
      * se ilmestyy käyttöliittymään */
     listOfFurniture += newOne
     addTo.children.add(indexToAddTo, shape)
-    println(amountOfLamps)
 
     /** Skaalataan huonekalu ja sijoitetaan se oikeisiin koordinaatteihin käyttöliittymässä */
     shape.setScaleX(DesingGUI.floorPlanScaleX)
@@ -76,16 +77,15 @@ class FurniturePanel (f: Furniture, givenWidth: Double, givenHeight: Double, add
     shape.setLayoutY(newOne.y)
 
     /** Tehdään huonekalusta raahattava DraggableMaker luokan avulla */
-    val draggableMaker = new DraggableMaker()
     draggableMaker.makeDraggable(newOne, listOfFurniture, addTo)
 
     /** Avaa muutosikkunan heti kun huonekalu lisätään kuvaan */
-    popUpMaker(newOne, addTo, listOfFurniture).show()
+    popUpMaker.makePopUp(newOne, addTo, listOfFurniture).show()
 
     /** Kun uudesta huonekalusta klikataan hiiren toisella näppäimellä, ilmestyy
      * esiin muutosvalikko */
     newOne.shape.onMouseClicked = (event) =>
       if event.getButton == MouseButton.SECONDARY then
-        popUpMaker(newOne, addTo, listOfFurniture).show()
+        popUpMaker.makePopUp(newOne, addTo, listOfFurniture).show()
 
   this.children = Array( furnitureName, f.shape, addButton )

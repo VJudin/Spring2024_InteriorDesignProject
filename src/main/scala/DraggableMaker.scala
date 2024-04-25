@@ -25,13 +25,20 @@ class DraggableMaker:
       * ei tarvitse huomioida huonekalujen päällekkäisyyttä */
         if (f.canBePlacedOnTop && furniture.canHaveOnTop) || (f.canHaveOnTop && furniture.canBePlacedOnTop) then
           collisions += false
+    /** Jos molemmat huonekalut ovat seiniä, ei tarvitse ottaa huomioon niiden päällekäisyyttä */
         else if f.fname == "Wall" && furniture.fname == "Wall" then
           collisions += false
         else
           if !f.shape.equals(furniture.shape) then
+            /** Muodostetaan kahden huonekalun muotojen välinen leikkaus.
+             * Mikäli leikkaus on suurempi kuin -1, ovat muodot päällekäin ja
+             * listaan lisätään arvo true */
             var intersect = Shape.intersect( furniture.shape, f.shape )
-            if intersect.getBoundsInLocal.getWidth != -1 then
+            if intersect.getBoundsInLocal.getWidth > -1 then
              collisions += true
+    /** Tarkastetaan, onko tarkistuksen yhtyedessä löydetty arvoa true. Jos on, niin
+     * sitten huonekalu on jonkin toisen objektin päällä, jonka päällä se ei saisi olla.
+     * Siirtäminen tapahtuu makeDraggable-metodissa */
     collisions.contains( true )
 
   /** Tarkistaa, että huonekalu on käyttöliittymän näkymässä vertaamalla huonekalun ja Panen boundseja. */
@@ -51,6 +58,7 @@ class DraggableMaker:
     var n = f.shape
     var e = f.shape.getBoundsInParent
 
+    /** HUONEKALUJEN LIIKUTTAMISEN LAATIMISEEN ON KÄYTETTY APUNA EDEN CODINGIN TUTORIAALIA */
     /** Kun muotoa klikataan, alustetaan tietyt tiedot sen liikuttamista ja myöhempiä metodeja varten */
     n.setOnMousePressed((event) =>
       mouseAnchorX = event.getSceneX
@@ -83,6 +91,7 @@ class DraggableMaker:
         f.y = event.getSceneY + mouseOffsetFromNodeY
       n.setTranslateX(0)
       n.setTranslateY(0))
+
   end makeDraggable
 
 

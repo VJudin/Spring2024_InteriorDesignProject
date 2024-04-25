@@ -12,6 +12,8 @@ class Furniture( val fname: String,  var width: Double,  var lenght: Double, val
   this.shape.fill = this.color
 
 
+/** Metodi, joka muuttaa huonekalun kokoa. Sille annetut mitat ovat huonekalun leveys ja
+ * korkeus.*/
   def changeSize(w: Double, l: Double): Unit =
     width = w
     lenght = l
@@ -20,14 +22,14 @@ class Furniture( val fname: String,  var width: Double,  var lenght: Double, val
         shape.width = w
         shape.height = l
       case shape: Circle =>
-        shape.radius = w
+        shape.radius = w / 2
       case shape: Ellipse =>
-        shape.radiusX = w
-        shape.radiusY = l
+        shape.radiusX = w / 2
+        shape.radiusY = l / 2
       case shape: Arc =>
         shape.setType(ArcType.Round)
         shape.radiusX = w
-        shape.radiusY = l
+        shape.radiusY = w
         shape.startAngle = 0.0
         shape.length = 90.0
       case _ => shape.fill = Pink
@@ -96,7 +98,7 @@ class Door( width: Int, lenght: Int, x: Int, y: Int, color: Color) extends Furni
 class Window( width: Int, lenght: Int, x: Int, y: Int) extends Furniture( "Window", width, lenght, false, Rectangle(width, lenght), x, y, Color.Blue, false, Image(FileInputStream("src/main/Pictures/window.jpeg"))):
   this.shape.fill = this.color
 
-class Rug( width: Double, lenght: Double, x: Double, y: Double, shape: Shape, color: Color) extends Furniture( "Rug", width, lenght, true, shape, x, y, color, true, Image( FileInputStream("src/main/Pictures/Rug.jpeg")))
+class Rug( width: Double, lenght: Double, x: Double, y: Double, shape: Shape, color: Color, image: Image) extends Furniture( "Rug", width, lenght, true, shape, x, y, color, true, image)
 
 class Lamp( width: Int, x: Double, y: Double, color: Color) extends Furniture( "Lamp", width, 1, false, Circle( width ), x, y, color, true, Image( FileInputStream("src/main/Pictures/cealingLight.jpeg")))
 
