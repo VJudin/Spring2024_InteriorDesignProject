@@ -266,7 +266,6 @@ object DesingGUI extends JFXApp3:
        * tiedostoon.*/
       val fileChooser = new FileChooser():
         extensionFilters.add( ExtensionFilter("PNG", "*.png") )
-        extensionFilters.add( ExtensionFilter("JPEG", "*.jpg"))
       fileChooser.setTitle("Save file")
       val fileToSave = fileChooser.showSaveDialog(stage)
       if fileToSave != null then
@@ -274,7 +273,7 @@ object DesingGUI extends JFXApp3:
         var writable = new WritableImage( stack.getWidth.toInt, stack.getHeight.toInt)
         stack.snapshot(null, writable)
         var rendered = SwingFXUtils.fromFXImage(writable, null)
-        ImageIO.write(rendered, "jpg", fileToSave)
+        ImageIO.write(rendered, "png", fileToSave)
   end saveButtonMaker
 
 
