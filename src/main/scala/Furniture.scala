@@ -7,13 +7,23 @@ import scalafx.scene.shape.{Arc, ArcType, Circle, Ellipse, Rectangle, Shape}
 
 import java.io.FileInputStream
 
-class Furniture( val fname: String,  var width: Double,  var lenght: Double, val canHaveOnTop: Boolean, val shape: Shape, var x: Double, var y: Double, var color: Color, val canBePlacedOnTop: Boolean, val image: Image):
+class Furniture(
+  val fname: String,
+  var width: Double,
+  var lenght: Double,
+  val canHaveOnTop: Boolean,
+  val shape: Shape,
+  var x: Double,
+  var y: Double,
+  var color: Color,
+  val canBePlacedOnTop: Boolean,
+  val image: Image
+):
 
   this.shape.fill = this.color
 
-
-/** Metodi, joka muuttaa huonekalun kokoa. Sille annetut mitat ovat huonekalun leveys ja
- * korkeus.*/
+  /** Method that allows for the size of the furniture to change
+    */
   def changeSize(w: Double, l: Double): Unit =
     width = w
     lenght = l
@@ -34,9 +44,10 @@ class Furniture( val fname: String,  var width: Double,  var lenght: Double, val
         shape.length = 90.0
       case _ => shape.fill = Pink
 
-  /** Vaihtaa huonekaluolion säilyttämää väriä ja samalla muuttaa siitä mahdollisesti piirretyn version värin.
-   * Ovien ja kaappien/tasojen väriä ei pysty vaihtamaan */
-  def changeColor( c: Color): Unit =
+  /** Changes the color of the furniture. The color of doors and counters can't
+    * be changed.
+    */
+  def changeColor(c: Color): Unit =
     shape match
       case shape: Arc =>
         shape.strokeWidth = 3
@@ -53,57 +64,138 @@ class Furniture( val fname: String,  var width: Double,  var lenght: Double, val
       case _ =>
         color = c
         shape.fill = c
-    
+
   val f = this
 
-    
-  /** Mahdollistaa tietyn huonekaluolion kopioimisen, jotta kopioita huonekaluista voi lisätä pohjapiirrustukseen*/
+  /** Copies a piece of furniture which can then be added to the floorplan */
   def copy(): Furniture =
     var shapeOf: Shape =
       this.shape match
-        case shape: Rectangle => new Rectangle:
-          this.width = f.width
-          this.height = f.lenght
-        case shape: Circle => new Circle:
-          radius = f.width
-        case  shape: Ellipse => new Ellipse:
-          this.radiusX = f.width
-          this.radiusY = f.lenght
-        case shape: Arc => new Arc:
-          this.setType( ArcType.Round )
-          this.radiusX = f.width
-          this.radiusY = f.lenght
-          this.startAngle = 0.0
-          this.length = 90.0
-    new Furniture( fname, width, lenght, canHaveOnTop, shapeOf, 0.0, 0.0, color, canBePlacedOnTop, image)
+        case shape: Rectangle =>
+          new Rectangle:
+            this.width = f.width
+            this.height = f.lenght
+        case shape: Circle =>
+          new Circle:
+            radius = f.width
+        case shape: Ellipse =>
+          new Ellipse:
+            this.radiusX = f.width
+            this.radiusY = f.lenght
+        case shape: Arc =>
+          new Arc:
+            this.setType(ArcType.Round)
+            this.radiusX = f.width
+            this.radiusY = f.lenght
+            this.startAngle = 0.0
+            this.length = 90.0
+    new Furniture(
+      fname,
+      width,
+      lenght,
+      canHaveOnTop,
+      shapeOf,
+      0.0,
+      0.0,
+      color,
+      canBePlacedOnTop,
+      image
+    )
 
+class Wall(width: Int, length: Int, x: Int, y: Int, color: Color)
+    extends Furniture(
+      "Wall",
+      width,
+      length,
+      false,
+      Rectangle(width, length),
+      x,
+      y,
+      color,
+      false,
+      Image(FileInputStream("src/main/Pictures/wall.jpeg"))
+    ):
 
-class Wall(width: Int, length: Int, x: Int, y: Int, color: Color) extends Furniture("Wall", width, length, false,  Rectangle(width, length), x, y, color, false, Image( FileInputStream("src/main/Pictures/wall.jpeg")) ):
-  
   this.shape.fill = this.color
 
-class Door( width: Int, lenght: Int, x: Int, y: Int, color: Color) extends Furniture( "Door", width, lenght, false, Arc(0, 0, width, lenght , 0.0, 90.0), x, y, color, false, Image( FileInputStream("src/main/Pictures/door.jpeg"))):
+class Door(width: Int, lenght: Int, x: Int, y: Int, color: Color)
+    extends Furniture(
+      "Door",
+      width,
+      lenght,
+      false,
+      Arc(0, 0, width, lenght, 0.0, 90.0),
+      x,
+      y,
+      color,
+      false,
+      Image(FileInputStream("src/main/Pictures/door.jpeg"))
+    ):
 
   shape.fill = Color.White
 
-  /** Jotta ovella on oikea ArcType täytyy sen sisällä tehdä match-case rakenne */
+  /** Match-case makes sure a door has the correct Arc type
+    */
   shape match
     case shape: Arc =>
       shape.setType(scene.shape.ArcType.ROUND)
       shape.setStrokeWidth(3)
-      shape.setStroke( Color.Black )
+      shape.setStroke(Color.Black)
     case _ => shape.fill = Pink
 
-
-class Window( width: Int, lenght: Int, x: Int, y: Int) extends Furniture( "Window", width, lenght, false, Rectangle(width, lenght), x, y, Color.Blue, false, Image(FileInputStream("src/main/Pictures/window.jpeg"))):
+class Window(width: Int, lenght: Int, x: Int, y: Int)
+    extends Furniture(
+      "Window",
+      width,
+      lenght,
+      false,
+      Rectangle(width, lenght),
+      x,
+      y,
+      Color.Blue,
+      false,
+      Image(FileInputStream("src/main/Pictures/window.jpeg"))
+    ):
   this.shape.fill = this.color
 
-class Rug( width: Double, lenght: Double, x: Double, y: Double, shape: Shape, color: Color, image: Image) extends Furniture( "Rug", width, lenght, true, shape, x, y, color, true, image)
+class Rug(
+  width: Double,
+  lenght: Double,
+  x: Double,
+  y: Double,
+  shape: Shape,
+  color: Color,
+  image: Image
+) extends Furniture("Rug", width, lenght, true, shape, x, y, color, true, image)
 
-class Lamp( width: Int, x: Double, y: Double, color: Color) extends Furniture( "Lamp", width, 1, false, Circle( width ), x, y, color, true, Image( FileInputStream("src/main/Pictures/cealingLight.jpeg")))
+class Lamp(width: Int, x: Double, y: Double, color: Color)
+    extends Furniture(
+      "Lamp",
+      width,
+      1,
+      false,
+      Circle(width),
+      x,
+      y,
+      color,
+      true,
+      Image(FileInputStream("src/main/Pictures/cealingLight.jpeg"))
+    )
 
-class Counter( width: Int, lenght: Int, x: Int, y: Int, color: Color) extends Furniture("Counter", width, lenght, false, Rectangle( width, lenght), x, y, color, false, Image( FileInputStream("src/main/Pictures/counter.jpeg"))):
+class Counter(width: Int, lenght: Int, x: Int, y: Int, color: Color)
+    extends Furniture(
+      "Counter",
+      width,
+      lenght,
+      false,
+      Rectangle(width, lenght),
+      x,
+      y,
+      color,
+      false,
+      Image(FileInputStream("src/main/Pictures/counter.jpeg"))
+    ):
 
   shape.fill = Color.White
   shape.setStrokeWidth(5)
-  shape.setStroke( Color.Black )
+  shape.setStroke(Color.Black)
